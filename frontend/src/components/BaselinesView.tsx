@@ -63,10 +63,10 @@ export const BaselinesView: React.FC<BaselinesViewProps> = ({
     <div className="animate-fade-in" style={{ padding: '28px 36px', maxWidth: '1400px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#fff', marginBottom: '6px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
             Baseline Model Training & Characterization
           </h1>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Train uncompressed high-capacity baseline algorithms to establish gold-standard predictive ceilings before applying edge compression.
           </p>
         </div>
@@ -92,7 +92,7 @@ export const BaselinesView: React.FC<BaselinesViewProps> = ({
             >
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>
                     {fam.name}
                   </h3>
                   {result ? (
@@ -105,7 +105,7 @@ export const BaselinesView: React.FC<BaselinesViewProps> = ({
                     </span>
                   )}
                 </div>
-                <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5, marginBottom: '14px' }}>
+                <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.5, marginBottom: '14px' }}>
                   {fam.desc}
                 </p>
 
@@ -131,9 +131,9 @@ export const BaselinesView: React.FC<BaselinesViewProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '6px' }}>
-                      <span>p50 Latency: <strong style={{ color: '#fff' }}>{result.benchmark?.warm_latency_ms_p50?.toFixed(3) || '0.45'}ms</strong></span>
-                      <span>Disk: <strong style={{ color: '#fff' }}>{((result.benchmark?.artifact_size_bytes || 50000) / 1024).toFixed(1)}KB</strong></span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '6px' }}>
+                      <span>p50 Latency: <strong style={{ color: '#0f172a' }}>{result.benchmark?.warm_latency_ms_p50?.toFixed(3) || '0.45'}ms</strong></span>
+                      <span>Disk: <strong style={{ color: '#0f172a' }}>{((result.benchmark?.artifact_size_bytes || 50000) / 1024).toFixed(1)}KB</strong></span>
                     </div>
                   </div>
                 ) : (
@@ -145,7 +145,7 @@ export const BaselinesView: React.FC<BaselinesViewProps> = ({
                     fontSize: '11px',
                     color: '#64748b'
                   }}>
-                    Typical uncompressed footprint: <span style={{ color: '#94a3b8' }}>{fam.defaultSize}</span>
+                    Typical uncompressed footprint: <span style={{ color: '#64748b' }}>{fam.defaultSize}</span>
                   </div>
                 )}
               </div>

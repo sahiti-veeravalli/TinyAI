@@ -64,4 +64,5 @@ desktop.ini
 
 # Ephemeral export test bundles (keep exp_canonical_fraud_01 intact)
 artifacts/bundle_*
+artifacts/bundles/
 artifacts/tmp*

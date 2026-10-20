@@ -129,3 +129,13 @@ export async function fetchHardwarePresets(): Promise<HardwarePreset[]> {
   if (!res.ok) throw new Error('Failed to fetch hardware presets');
   return res.json();
 }
+
+export function getDownloadBundleUrl(modelId: string): string {
+  return `${API_BASE}/models/${modelId}/download`;
+}
+
+export async function fetchModelExplainability(modelId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/models/${modelId}/explainability`);
+  if (!res.ok) throw new Error('Failed to fetch model explainability');
+  return res.json();
+}

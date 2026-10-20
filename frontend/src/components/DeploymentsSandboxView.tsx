@@ -73,19 +73,19 @@ export const DeploymentsSandboxView: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>
               Edge Deployments & Live Inference Test Bench
             </h1>
             <span className="badge badge-green">Low Latency Runtime</span>
           </div>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Test compressed models with real inputs in sub-millisecond execution times and inspect generated container bundles.
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid #e2e8f0', marginBottom: '24px' }}>
         {[
           { id: 'sandbox', label: 'Interactive Prediction Sandbox', icon: Radio },
           { id: 'docker', label: 'Dockerfile & Container Bundle', icon: Code2 },
@@ -123,7 +123,7 @@ export const DeploymentsSandboxView: React.FC = () => {
           {/* Input Form Panel */}
           <div className="card" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
                 Input Feature Payload
               </h2>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -138,7 +138,7 @@ export const DeploymentsSandboxView: React.FC = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
               <div>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
                   Transaction Amount ($)
                 </label>
                 <input
@@ -148,17 +148,17 @@ export const DeploymentsSandboxView: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    backgroundColor: '#0a0f1d',
+                    backgroundColor: '#ffffff',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: '#0f172a',
                     fontSize: '13px'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
                   Transaction Hour (0-23)
                 </label>
                 <input
@@ -170,17 +170,17 @@ export const DeploymentsSandboxView: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    backgroundColor: '#0a0f1d',
+                    backgroundColor: '#ffffff',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: '#0f172a',
                     fontSize: '13px'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
                   Merchant Distance (km)
                 </label>
                 <input
@@ -190,17 +190,17 @@ export const DeploymentsSandboxView: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    backgroundColor: '#0a0f1d',
+                    backgroundColor: '#ffffff',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: '#0f172a',
                     fontSize: '13px'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
                   v1_signal
                 </label>
                 <input
@@ -211,17 +211,17 @@ export const DeploymentsSandboxView: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    backgroundColor: '#0a0f1d',
+                    backgroundColor: '#ffffff',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: '#0f172a',
                     fontSize: '13px'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
                   v2_signal
                 </label>
                 <input
@@ -232,17 +232,17 @@ export const DeploymentsSandboxView: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    backgroundColor: '#0a0f1d',
+                    backgroundColor: '#ffffff',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: '#0f172a',
                     fontSize: '13px'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
                   v3_signal
                 </label>
                 <input
@@ -253,10 +253,10 @@ export const DeploymentsSandboxView: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    backgroundColor: '#0a0f1d',
+                    backgroundColor: '#ffffff',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: '#0f172a',
                     fontSize: '13px'
                   }}
                 />
@@ -278,7 +278,7 @@ export const DeploymentsSandboxView: React.FC = () => {
           <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+                <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
                   Inference Execution Telemetry
                 </h2>
                 <span className="badge badge-indigo">Direct In-Memory Run</span>
@@ -303,10 +303,10 @@ export const DeploymentsSandboxView: React.FC = () => {
                       <ShieldCheck size={28} color="#10b981" />
                     )}
                     <div>
-                      <div style={{ fontSize: '17px', fontWeight: 800, color: '#fff' }}>
+                      <div style={{ fontSize: '17px', fontWeight: 800, color: '#0f172a' }}>
                         {predictionResult.prediction === 1 ? 'FRAUD DETECTED (High Risk)' : 'TRANSACTION LEGITIMATE'}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#cbd5e1' }}>
+                      <div style={{ fontSize: '12px', color: '#475569' }}>
                         Confidence Probability: <strong className="font-mono">{(predictionResult.probability * 100).toFixed(2)}%</strong>
                       </div>
                     </div>
@@ -340,7 +340,7 @@ export const DeploymentsSandboxView: React.FC = () => {
                   border: '1px dashed rgba(255, 255, 255, 0.08)'
                 }}>
                   <Cpu size={32} color="#64748b" style={{ margin: '0 auto 12px' }} />
-                  <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+                  <p style={{ fontSize: '13px', color: '#64748b' }}>
                     Click "Execute Edge Prediction" to run the optimized model and record real inference timing.
                   </p>
                 </div>
@@ -357,14 +357,14 @@ export const DeploymentsSandboxView: React.FC = () => {
 
       {activeTab === 'docker' && (
         <div className="card" style={{ padding: '24px' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
             Production Edge Dockerfile
           </h2>
           <pre className="font-mono" style={{
-            backgroundColor: '#0a0f1d',
+            backgroundColor: '#ffffff',
             padding: '18px',
             borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: '1px solid #e2e8f0',
             fontSize: '12px',
             color: '#a5b4fc',
             lineHeight: 1.6,
@@ -390,14 +390,14 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]`}
 
       {activeTab === 'api' && (
         <div className="card" style={{ padding: '24px' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
             cURL Request Sample
           </h2>
           <pre className="font-mono" style={{
-            backgroundColor: '#0a0f1d',
+            backgroundColor: '#ffffff',
             padding: '18px',
             borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: '1px solid #e2e8f0',
             fontSize: '12px',
             color: '#38bdf8',
             lineHeight: 1.6,

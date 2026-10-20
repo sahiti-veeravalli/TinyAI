@@ -133,3 +133,32 @@ export interface HardwarePreset {
   recommended_max_memory_mb: number;
   supported_runtimes: string[];
 }
+
+export interface ToolDefinition {
+  id: string;
+  name: string;
+  shortDesc: string;
+  badge: string;
+  category: 'compression' | 'profiling' | 'deployment' | 'audit';
+  icon: string;
+  color: string;
+  bgLight: string;
+  popular?: boolean;
+}
+
+export interface FeatureAttributionItem {
+  feature: string;
+  baseline_importance: number;
+  compressed_importance: number;
+  delta_pct: number;
+}
+
+export interface ModelExplainability {
+  model_id: string;
+  model_name: string;
+  fidelity_score_pct: number;
+  rank_correlation: number;
+  features_analyzed: number;
+  feature_attributions: FeatureAttributionItem[];
+  audit_verdict: string;
+}

@@ -39,12 +39,12 @@ export const MonitoringView: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>
               Edge Observability & Data Drift Monitor
             </h1>
             <span className="badge badge-indigo">Statistical Testing</span>
           </div>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Monitor streaming inference distributions via two-sample Kolmogorov-Smirnov tests and Population Stability Index (PSI).
           </p>
         </div>
@@ -58,7 +58,7 @@ export const MonitoringView: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
         <div className="card" style={{ padding: '18px' }}>
           <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Total Inferences (24h)</span>
-          <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#fff', margin: '4px 0' }}>
+          <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
             {metrics?.total_requests_24h ? metrics.total_requests_24h.toLocaleString() : '142,850'}
           </div>
           <span style={{ fontSize: '11px', color: '#10b981' }}>Throughput: ~84.5 req/sec</span>
@@ -69,7 +69,7 @@ export const MonitoringView: React.FC = () => {
           <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#22d3ee', margin: '4px 0' }}>
             {metrics?.latency_p50_ms || 0.42} ms
           </div>
-          <span style={{ fontSize: '11px', color: '#94a3b8' }}>Target: &lt; 1.0 ms</span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>Target: &lt; 1.0 ms</span>
         </div>
 
         <div className="card" style={{ padding: '18px' }}>
@@ -77,7 +77,7 @@ export const MonitoringView: React.FC = () => {
           <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#f59e0b', margin: '4px 0' }}>
             {metrics?.latency_p99_ms || 1.45} ms
           </div>
-          <span style={{ fontSize: '11px', color: '#94a3b8' }}>Zero tail timeouts</span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>Zero tail timeouts</span>
         </div>
 
         <div className="card" style={{ padding: '18px' }}>
@@ -93,10 +93,10 @@ export const MonitoringView: React.FC = () => {
       <div className="card" style={{ padding: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '2px' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '2px' }}>
               Two-Sample Kolmogorov-Smirnov & PSI Feature Drift Audit
             </h2>
-            <p style={{ fontSize: '12px', color: '#94a3b8' }}>
+            <p style={{ fontSize: '12px', color: '#64748b' }}>
               Detects distribution divergence between reference training dataset and production edge inference queries.
             </p>
           </div>
@@ -111,20 +111,20 @@ export const MonitoringView: React.FC = () => {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
               <thead>
-                <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.04)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Feature Name</th>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>KS Statistic</th>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>p-Value</th>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>PSI Score</th>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Reference Mean</th>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Current Mean</th>
-                  <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Severity Status</th>
+                <tr style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>Feature Name</th>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>KS Statistic</th>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>p-Value</th>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>PSI Score</th>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>Reference Mean</th>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>Current Mean</th>
+                  <th style={{ padding: '10px 14px', color: '#64748b' }}>Severity Status</th>
                 </tr>
               </thead>
               <tbody>
                 {drift.feature_reports.map((f) => (
                   <tr key={f.feature_name} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <td style={{ padding: '10px 14px', fontWeight: 600, color: '#fff' }}>
+                    <td style={{ padding: '10px 14px', fontWeight: 600, color: '#0f172a' }}>
                       {f.feature_name}
                     </td>
                     <td className="font-mono" style={{ padding: '10px 14px', color: '#38bdf8' }}>
@@ -136,10 +136,10 @@ export const MonitoringView: React.FC = () => {
                     <td className="font-mono" style={{ padding: '10px 14px', color: f.psi_score > 0.2 ? '#f59e0b' : '#34d399' }}>
                       {f.psi_score.toFixed(4)}
                     </td>
-                    <td className="font-mono" style={{ padding: '10px 14px', color: '#94a3b8' }}>
+                    <td className="font-mono" style={{ padding: '10px 14px', color: '#64748b' }}>
                       {f.reference_mean.toFixed(2)}
                     </td>
-                    <td className="font-mono" style={{ padding: '10px 14px', color: '#cbd5e1' }}>
+                    <td className="font-mono" style={{ padding: '10px 14px', color: '#475569' }}>
                       {f.current_mean.toFixed(2)}
                     </td>
                     <td style={{ padding: '10px 14px' }}>

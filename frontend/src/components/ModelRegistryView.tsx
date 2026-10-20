@@ -53,12 +53,12 @@ export const ModelRegistryView: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>
               Model Registry & Lineage
             </h1>
             <span className="badge badge-indigo">Version Controlled Artifacts</span>
           </div>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Audited store of compressed model artifacts, hardware fingerprints, provenance manifests, and deployment packages.
           </p>
         </div>
@@ -81,10 +81,10 @@ export const ModelRegistryView: React.FC = () => {
               <CheckCircle2 size={16} />
               <span>Production Edge Bundle Generated!</span>
             </div>
-            <p className="font-mono" style={{ fontSize: '12px', color: '#cbd5e1' }}>
+            <p className="font-mono" style={{ fontSize: '12px', color: '#475569' }}>
               Bundle Directory: {exportResult.bundle_directory}
             </p>
-            <div style={{ display: 'flex', gap: '12px', marginTop: '6px', fontSize: '11px', color: '#94a3b8' }}>
+            <div style={{ display: 'flex', gap: '12px', marginTop: '6px', fontSize: '11px', color: '#64748b' }}>
               <span>✓ app.py (FastAPI)</span>
               <span>✓ Dockerfile</span>
               <span>✓ requirements.txt</span>
@@ -106,15 +106,15 @@ export const ModelRegistryView: React.FC = () => {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
             <thead>
-              <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.04)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>Model Name & Version</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>Strategy & Family</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>Quality</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>p50 Latency</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>Disk Footprint</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>Compression</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8' }}>Status</th>
-                <th style={{ padding: '12px 14px', color: '#94a3b8', textAlign: 'right' }}>Actions</th>
+              <tr style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>Model Name & Version</th>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>Strategy & Family</th>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>Quality</th>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>p50 Latency</th>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>Disk Footprint</th>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>Compression</th>
+                <th style={{ padding: '12px 14px', color: '#64748b' }}>Status</th>
+                <th style={{ padding: '12px 14px', color: '#64748b', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -123,13 +123,13 @@ export const ModelRegistryView: React.FC = () => {
                 return (
                   <tr key={m.model_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
                     <td style={{ padding: '12px 14px' }}>
-                      <div style={{ fontWeight: 600, color: '#fff' }}>{m.name}</div>
+                      <div style={{ fontWeight: 600, color: '#0f172a' }}>{m.name}</div>
                       <span className="font-mono" style={{ fontSize: '11px', color: '#64748b' }}>
                         {m.model_id} • v{m.version}
                       </span>
                     </td>
                     <td style={{ padding: '12px 14px' }}>
-                      <div style={{ color: '#cbd5e1' }}>{m.strategy}</div>
+                      <div style={{ color: '#475569' }}>{m.strategy}</div>
                       <span style={{ fontSize: '11px', color: '#64748b' }}>{m.model_family}</span>
                     </td>
                     <td className="font-mono" style={{ padding: '12px 14px', color: '#38bdf8', fontWeight: 600 }}>

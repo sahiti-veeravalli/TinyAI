@@ -13,12 +13,12 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ onNavigate, projects
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>
               Project Workspaces
             </h1>
             <span className="badge badge-indigo">Multi-Tenant Isolation</span>
           </div>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Manage optimization targets, resource quotas, and experiment lineages grouped by deployment domain.
           </p>
         </div>
@@ -29,27 +29,27 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ onNavigate, projects
           <div key={proj.project_id} className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
                   {proj.name}
                 </h3>
                 <span className="badge badge-cyan" style={{ fontSize: '10px' }}>
                   {proj.target_runtime}
                 </span>
               </div>
-              <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.6, marginBottom: '16px' }}>
+              <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.6, marginBottom: '16px' }}>
                 {proj.description}
               </p>
               <div style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                backgroundColor: '#f8fafc', border: '1px solid #e2e8f0',
                 padding: '10px 12px',
                 borderRadius: '6px',
                 fontSize: '11px',
                 display: 'flex',
                 justifyContent: 'space-between',
-                color: '#cbd5e1',
+                color: '#475569',
                 marginBottom: '16px'
               }}>
-                <span>Experiments: <strong style={{ color: '#fff' }}>{proj.experiments_count || 1}</strong></span>
+                <span>Experiments: <strong style={{ color: '#0f172a' }}>{proj.experiments_count || 1}</strong></span>
                 <span>Production Models: <strong style={{ color: '#10b981' }}>{proj.models_count || 2}</strong></span>
               </div>
             </div>

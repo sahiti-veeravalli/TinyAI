@@ -62,12 +62,12 @@ tinyai-cli export --model-id mod_canonical_pruned
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>
               Developer Platform: Python SDK & CLI
             </h1>
             <span className="badge badge-indigo">Programmatic Automation</span>
           </div>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Integrate TinyAI budget-constrained compression directly into MLOps pipelines, GitHub Actions, and embedded runtimes.
           </p>
         </div>
@@ -88,7 +88,7 @@ tinyai-cli export --model-id mod_canonical_pruned
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Code2 size={18} color="#818cf8" />
-            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
               Python SDK (`tinyai_sdk`)
             </h2>
           </div>
@@ -101,12 +101,12 @@ tinyai-cli export --model-id mod_canonical_pruned
           </button>
         </div>
         <pre className="font-mono" style={{
-          backgroundColor: '#0a0f1d',
+          backgroundColor: '#ffffff',
           padding: '18px',
           borderRadius: '8px',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          border: '1px solid #e2e8f0',
           fontSize: '12px',
-          color: '#cbd5e1',
+          color: '#475569',
           lineHeight: 1.6,
           overflowX: 'auto'
         }}>
@@ -119,7 +119,7 @@ tinyai-cli export --model-id mod_canonical_pruned
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Terminal size={18} color="#06b6d4" />
-            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
               TinyAI CLI (`tinyai-cli`)
             </h2>
           </div>
@@ -132,10 +132,10 @@ tinyai-cli export --model-id mod_canonical_pruned
           </button>
         </div>
         <pre className="font-mono" style={{
-          backgroundColor: '#0a0f1d',
+          backgroundColor: '#ffffff',
           padding: '18px',
           borderRadius: '8px',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          border: '1px solid #e2e8f0',
           fontSize: '12px',
           color: '#38bdf8',
           lineHeight: 1.6,

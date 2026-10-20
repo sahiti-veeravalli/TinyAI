@@ -85,10 +85,10 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#fff', marginBottom: '6px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
             Tabular Datasets & Integrity Validation
           </h1>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Safely ingest untrusted CSV/Parquet files, inspect schema, check class imbalance, and detect leakage channels.
           </p>
         </div>
@@ -117,7 +117,7 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
         <div style={{
           display: 'flex',
           gap: '8px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid #e2e8f0',
           marginBottom: '20px',
           paddingBottom: '8px',
           overflowX: 'auto'
@@ -166,7 +166,7 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
           <div className="card" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div>
-                <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
                   {currentDataset.name}
                 </h2>
                 <span className="font-mono" style={{ fontSize: '11px', color: '#64748b' }}>
@@ -182,20 +182,20 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
 
             {/* Target Column Selector */}
             <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              backgroundColor: '#f8fafc',
               padding: '14px 16px',
               borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
+              border: '1px solid #e2e8f0',
               marginBottom: '20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#e2e8f0', display: 'block', marginBottom: '2px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '2px' }}>
                   Optimization Target Feature
                 </label>
-                <p style={{ fontSize: '11px', color: '#94a3b8' }}>
+                <p style={{ fontSize: '11px', color: '#64748b' }}>
                   Defines classification ground truth label for model training and edge evaluation.
                 </p>
               </div>
@@ -207,10 +207,10 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
                 }}
                 style={{
                   padding: '6px 12px',
-                  backgroundColor: '#0a0f1d',
+                  backgroundColor: '#ffffff',
                   border: '1px solid rgba(99, 102, 241, 0.4)',
                   borderRadius: '6px',
-                  color: '#fff',
+                  color: '#0f172a',
                   fontSize: '13px',
                   outline: 'none'
                 }}
@@ -225,14 +225,14 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
             <div style={{ marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
                 <Table size={15} color="#818cf8" />
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#e2e8f0' }}>
+                <span style={{ fontSize: '13px', fontWeight: 600, color: '#334155' }}>
                   Data Stream Preview (First 5 Rows)
                 </span>
               </div>
-              <div style={{ overflowX: 'auto', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px' }}>
+              <div style={{ overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
                   <thead>
-                    <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.04)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    <tr style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
                       {currentDataset.all_columns.slice(0, 8).map((col) => (
                         <th key={col} style={{ padding: '8px 12px', color: col === targetColumn ? '#818cf8' : '#94a3b8', fontWeight: 600 }}>
                           {col} {col === targetColumn && '(Target)'}
@@ -260,7 +260,7 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
           <div className="card" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
               <ShieldAlert size={18} color="#f59e0b" />
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
                 Integrity & Leakage Report
               </h3>
             </div>
@@ -285,8 +285,8 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
 
                 {/* Class Imbalance Metric */}
                 {validationReport.imbalance_ratio && (
-                  <div style={{ marginBottom: '14px', padding: '10px 12px', backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '6px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>
+                  <div style={{ marginBottom: '14px', padding: '10px 12px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>
                       <span>Class Imbalance Ratio</span>
                       <span className="font-mono" style={{ color: validationReport.imbalance_ratio > 10 ? '#f59e0b' : '#10b981', fontWeight: 700 }}>
                         {validationReport.imbalance_ratio.toFixed(1)}:1
@@ -317,10 +317,10 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ onDatasetSelect }) =
                           {issue.code}
                         </span>
                         {issue.column && (
-                          <span style={{ fontSize: '11px', color: '#cbd5e1', fontWeight: 600 }}>{issue.column}</span>
+                          <span style={{ fontSize: '11px', color: '#475569', fontWeight: 600 }}>{issue.column}</span>
                         )}
                       </div>
-                      <p style={{ fontSize: '11px', color: '#94a3b8', margin: '4px 0' }}>{issue.message}</p>
+                      <p style={{ fontSize: '11px', color: '#64748b', margin: '4px 0' }}>{issue.message}</p>
                       <p style={{ fontSize: '11px', color: '#818cf8', fontWeight: 500 }}>Rec: {issue.recommendation}</p>
                     </div>
                   ))}

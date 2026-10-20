@@ -31,8 +31,8 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
     <div className="animate-fade-in" style={{ padding: '28px 36px', maxWidth: '1400px', margin: '0 auto' }}>
       {/* Hero Banner */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%)',
-        border: '1px solid rgba(99, 102, 241, 0.25)',
+        background: '#ffffff',
+        border: '1px solid #e2e8f0',
         borderRadius: '16px',
         padding: '32px 36px',
         marginBottom: '28px',
@@ -60,13 +60,13 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             fontSize: '32px',
             fontWeight: 800,
             letterSpacing: '-0.03em',
-            color: '#fff',
+            color: '#0f172a',
             lineHeight: 1.2,
             marginBottom: '12px'
           }}>
             Satisfy predictive quality and edge resource budgets simultaneously.
           </h1>
-          <p style={{ fontSize: '15px', color: '#94a3b8', lineHeight: 1.6, marginBottom: '24px' }}>
+          <p style={{ fontSize: '15px', color: '#64748b', lineHeight: 1.6, marginBottom: '24px' }}>
             TinyAI systematically evaluates quantization, structural tree pruning, soft-target knowledge distillation,
             and compact alternative architectures to find the best model that satisfies your hard latency, disk size, and RAM limits.
           </p>
@@ -116,7 +116,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <Zap size={16} color="#06b6d4" />
             </div>
           </div>
-          <div style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+          <div style={{ fontSize: '28px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
             3.8x — 6.2x
           </div>
           <div style={{ fontSize: '12px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -133,10 +133,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <TrendingDown size={16} color="#10b981" />
             </div>
           </div>
-          <div style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+          <div style={{ fontSize: '28px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
             78.4%
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+          <div style={{ fontSize: '12px', color: '#64748b' }}>
             Average artifact reduction vs baseline
           </div>
         </div>
@@ -150,10 +150,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <Award size={16} color="#818cf8" />
             </div>
           </div>
-          <div style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+          <div style={{ fontSize: '28px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
             {overviewData?.registered_models_count || 3} Ready
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+          <div style={{ fontSize: '12px', color: '#64748b' }}>
             1-click Docker + FastAPI export
           </div>
         </div>
@@ -167,10 +167,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <Cpu size={16} color="#f59e0b" />
             </div>
           </div>
-          <div style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+          <div style={{ fontSize: '28px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
             {hardware.os || 'Linux / Windows'}
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+          <div style={{ fontSize: '12px', color: '#64748b' }}>
             {hardware.cpu_count_logical || 8} logical cores | {hardware.total_ram_gb || 16} GB RAM
           </div>
         </div>
@@ -178,7 +178,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
       {/* End-to-End Workflow Pipeline Cards */}
       <div style={{ marginBottom: '28px' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '14px' }}>
+        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
           Automated End-to-End Workflow
         </h2>
         <div style={{
@@ -234,10 +234,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 <span className="font-mono" style={{ fontSize: '11px', color: '#818cf8', fontWeight: 700 }}>
                   STEP {item.step}
                 </span>
-                <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#fff', margin: '4px 0 6px' }}>
+                <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#0f172a', margin: '4px 0 6px' }}>
                   {item.title}
                 </h3>
-                <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.5 }}>
                   {item.desc}
                 </p>
               </div>

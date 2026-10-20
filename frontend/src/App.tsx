@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar, NavTab } from './components/Sidebar';
 import { Header } from './components/Header';
-import { OverviewView } from './components/OverviewView';
+import { ToolsHubView } from './components/ToolsHubView';
+import { ToolWorkspaceView } from './components/ToolWorkspaceView';
 import { ProjectsView } from './components/ProjectsView';
 import { DatasetsView } from './components/DatasetsView';
 import { BaselinesView } from './components/BaselinesView';
@@ -15,6 +16,7 @@ import { checkBackendHealth, fetchOverview } from './api';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<NavTab>('overview');
+  const [activeToolId, setActiveToolId] = useState<string | null>(null);
   const [backendOnline, setBackendOnline] = useState<boolean>(true);
   const [overviewData, setOverviewData] = useState<any>(null);
 
@@ -41,9 +43,23 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleSelectTool = (toolId: string) => {
+    setActiveToolId(toolId);
+  };
+
+  const handleBackFromTool = () => {
+    setActiveToolId(null);
+  };
+
+  const handleNavigateTab = (tab: NavTab) => {
+    setActiveToolId(null);
+    setCurrentTab(tab);
+  };
+
   const handleDatasetSelectForBaseline = (datasetId: string, targetCol: string) => {
     setSelectedDatasetId(datasetId);
     setSelectedTargetCol(targetCol);
+    setActiveToolId(null);
     setCurrentTab('baselines');
   };
 
@@ -51,85 +67,100 @@ export const App: React.FC = () => {
     setSelectedDatasetId(datasetId);
     setSelectedBaselineFamily(modelFamily);
     setSelectedTargetCol(targetCol);
+    setActiveToolId(null);
     setCurrentTab('optimization_lab');
   };
 
   const handlePromoteToRegistry = () => {
+    setActiveToolId(null);
     setCurrentTab('model_registry');
   };
 
+  // When on the homepage without an active tool, display full-width iLovePDF layout
+  const isToolsHub = currentTab === 'overview' && !activeToolId;
+
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: '#080c14' }}>
-      {/* Persistent Navigation Sidebar */}
-      <Sidebar
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100vw', backgroundColor: '#f8fafc', color: '#0f172a' }}>
+      <Header
         currentTab={currentTab}
-        onSelectTab={setCurrentTab}
+        onNavigate={handleNavigateTab}
+        onSelectTool={handleSelectTool}
         backendOnline={backendOnline}
       />
 
-      {/* Main Content Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        <Header
-          activeProjectName="Point-of-Sale Fraud Sentinel"
-          onOpenDocs={() => setCurrentTab('documentation')}
-          onLaunchQuickExp={() => setCurrentTab('optimization_lab')}
-        />
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {!isToolsHub && (
+          <Sidebar
+            currentTab={currentTab}
+            onSelectTab={handleNavigateTab}
+            backendOnline={backendOnline}
+          />
+        )}
 
-        <main style={{ flex: 1, overflowY: 'auto', backgroundColor: '#080c14' }}>
-          {currentTab === 'overview' && (
-            <OverviewView
-              onNavigate={setCurrentTab}
-              overviewData={overviewData}
-              backendOnline={backendOnline}
+        <main style={{ flex: 1, overflowY: 'auto', backgroundColor: '#f8fafc', height: 'calc(100vh - 64px)' }}>
+          {activeToolId ? (
+            <ToolWorkspaceView
+              toolId={activeToolId}
+              onBack={handleBackFromTool}
+              onNavigateTab={handleNavigateTab}
             />
-          )}
+          ) : (
+            <>
+              {currentTab === 'overview' && (
+                <ToolsHubView
+                  onSelectTool={handleSelectTool}
+                  onNavigateTab={handleNavigateTab}
+                />
+              )}
 
-          {currentTab === 'projects' && (
-            <ProjectsView
-              onNavigate={setCurrentTab}
-              projects={overviewData?.projects || []}
-            />
-          )}
+              {currentTab === 'projects' && (
+                <ProjectsView
+                  onNavigate={handleNavigateTab}
+                  projects={overviewData?.projects || []}
+                />
+              )}
 
-          {currentTab === 'datasets' && (
-            <DatasetsView
-              onDatasetSelect={handleDatasetSelectForBaseline}
-            />
-          )}
+              {currentTab === 'datasets' && (
+                <DatasetsView
+                  onDatasetSelect={handleDatasetSelectForBaseline}
+                />
+              )}
 
-          {currentTab === 'baselines' && (
-            <BaselinesView
-              onSelectBaselineForOptimization={handleBaselineSelectForOptimization}
-            />
-          )}
+              {currentTab === 'baselines' && (
+                <BaselinesView
+                  onSelectBaselineForOptimization={handleBaselineSelectForOptimization}
+                />
+              )}
 
-          {currentTab === 'optimization_lab' && (
-            <OptimizationLabView
-              initialDatasetId={selectedDatasetId}
-              initialBaselineFamily={selectedBaselineFamily}
-              initialTargetCol={selectedTargetCol}
-              onPromoteToRegistry={handlePromoteToRegistry}
-            />
-          )}
+              {currentTab === 'optimization_lab' && (
+                <OptimizationLabView
+                  initialDatasetId={selectedDatasetId}
+                  initialBaselineFamily={selectedBaselineFamily}
+                  initialTargetCol={selectedTargetCol}
+                  onPromoteToRegistry={handlePromoteToRegistry}
+                />
+              )}
 
-          {currentTab === 'model_registry' && (
-            <ModelRegistryView />
-          )}
+              {currentTab === 'model_registry' && (
+                <ModelRegistryView />
+              )}
 
-          {currentTab === 'deployments' && (
-            <DeploymentsSandboxView />
-          )}
+              {currentTab === 'deployments' && (
+                <DeploymentsSandboxView />
+              )}
 
-          {currentTab === 'monitoring' && (
-            <MonitoringView />
-          )}
+              {currentTab === 'monitoring' && (
+                <MonitoringView />
+              )}
 
-          {currentTab === 'api_sdk' && (
-            <ApiSdkView />
-          )}
+              {currentTab === 'api_sdk' && (
+                <ApiSdkView />
+              )}
 
-          {currentTab === 'documentation' && (
-            <DocumentationView />
+              {currentTab === 'documentation' && (
+                <DocumentationView />
+              )}
+            </>
           )}
         </main>
       </div>

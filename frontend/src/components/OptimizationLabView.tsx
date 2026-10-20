@@ -123,12 +123,12 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>
               Optimization Lab & Pareto Frontier Engine
             </h1>
             <span className="badge badge-indigo">Multi-Objective Research</span>
           </div>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: '#64748b' }}>
             Domain-aware, budget-constrained search across quantization, pruning, soft-target distillation, and model selection.
           </p>
         </div>
@@ -140,14 +140,14 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
         <div className="card" style={{ padding: '22px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
             <Sliders size={18} color="#818cf8" />
-            <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+            <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>
               Operational Constraints
             </h2>
           </div>
 
           {/* Dataset & Baseline Pickers */}
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+            <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
               Input Dataset
             </label>
             <select
@@ -156,10 +156,10 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
               style={{
                 width: '100%',
                 padding: '8px 10px',
-                backgroundColor: '#0a0f1d',
+                backgroundColor: '#ffffff',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '6px',
-                color: '#fff',
+                color: '#0f172a',
                 fontSize: '12px'
               }}
             >
@@ -172,7 +172,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+            <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
               Baseline Algorithm
             </label>
             <select
@@ -181,10 +181,10 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
               style={{
                 width: '100%',
                 padding: '8px 10px',
-                backgroundColor: '#0a0f1d',
+                backgroundColor: '#ffffff',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '6px',
-                color: '#fff',
+                color: '#0f172a',
                 fontSize: '12px'
               }}
             >
@@ -198,7 +198,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
 
           {/* Sliders for Hard Constraints */}
           <div style={{ marginBottom: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#cbd5e1', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#475569', marginBottom: '4px' }}>
               <span>Max Artifact Size (KB)</span>
               <strong className="font-mono" style={{ color: '#818cf8' }}>{maxDiskSizeKb} KB</strong>
             </div>
@@ -214,7 +214,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#cbd5e1', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#475569', marginBottom: '4px' }}>
               <span>Max p50 Latency (ms)</span>
               <strong className="font-mono" style={{ color: '#06b6d4' }}>{maxLatencyMs} ms</strong>
             </div>
@@ -230,7 +230,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#cbd5e1', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#475569', marginBottom: '4px' }}>
               <span>Min ROC-AUC / PR-AUC</span>
               <strong className="font-mono" style={{ color: '#10b981' }}>{minQualityScore}</strong>
             </div>
@@ -247,7 +247,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
 
           {/* Priority selector */}
           <div style={{ marginBottom: '18px' }}>
-            <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+            <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
               Optimization Priority Strategy
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
@@ -279,7 +279,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
 
           {/* Compression Adapters Toggles */}
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+            <label style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
               Active Compression Adapters
             </label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -345,7 +345,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
                     <span className="badge badge-green">Recommended Pareto Model</span>
                     <span className="badge badge-indigo">{topCandidate.strategy}</span>
                   </div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>
                     {topCandidate.name}
                   </h3>
                 </div>
@@ -384,7 +384,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
                   <Info size={13} />
                   <span>Transparent Selection Rationale</span>
                 </div>
-                <p style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.5 }}>
                   {topCandidate.recommendation_rationale}
                 </p>
               </div>
@@ -400,7 +400,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
                   </button>
                 )}
                 {baselineCandidate && (
-                  <div style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>Vs Baseline:</span>
                     <strong style={{ color: '#34d399' }}>
                       {((1.0 - topCandidate.disk_size_kb / baselineCandidate.disk_size_kb) * 100).toFixed(0)}% smaller
@@ -419,7 +419,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
           <div className="card" style={{ padding: '22px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
               <div>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#fff', marginBottom: '2px' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', marginBottom: '2px' }}>
                   Interactive Pareto Frontier (Quality vs Latency vs Size)
                 </h3>
                 <p style={{ fontSize: '11px', color: '#64748b' }}>
@@ -427,7 +427,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
                 </p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <label style={{ fontSize: '11px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                <label style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={filterFeasibleOnly}
@@ -442,7 +442,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
             <div style={{
               width: '100%',
               height: '240px',
-              backgroundColor: '#0a0f1d',
+              backgroundColor: '#ffffff',
               borderRadius: '8px',
               border: '1px solid rgba(255, 255, 255, 0.06)',
               position: 'relative',
@@ -542,10 +542,10 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
                   pointerEvents: 'none',
                   zIndex: 20
                 }}>
-                  <div style={{ fontWeight: 700, color: '#fff', marginBottom: '2px' }}>
+                  <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '2px' }}>
                     {hoveredCandidate.name}
                   </div>
-                  <div style={{ color: '#94a3b8' }}>Strategy: {hoveredCandidate.strategy}</div>
+                  <div style={{ color: '#64748b' }}>Strategy: {hoveredCandidate.strategy}</div>
                   <div style={{ color: '#38bdf8' }}>Quality: {hoveredCandidate.quality_score.toFixed(4)}</div>
                   <div style={{ color: '#22d3ee' }}>Latency: {hoveredCandidate.latency_p50_ms.toFixed(3)} ms</div>
                   <div style={{ color: '#34d399' }}>Size: {hoveredCandidate.disk_size_kb.toFixed(1)} KB ({hoveredCandidate.compression_ratio.toFixed(1)}x)</div>
@@ -562,7 +562,7 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
       {/* Candidate Comparison Table */}
       <div className="card" style={{ padding: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
             Candidate Evaluation Pool & Feasibility Breakdown
           </h3>
           <span className="badge badge-indigo">
@@ -573,15 +573,15 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
             <thead>
-              <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.04)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Candidate</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Strategy</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Quality</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>p50 Latency</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Disk Size</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Compression</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Pareto Optimal</th>
-                <th style={{ padding: '10px 14px', color: '#94a3b8' }}>Feasibility Status</th>
+              <tr style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Candidate</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Strategy</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Quality</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>p50 Latency</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Disk Size</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Compression</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Pareto Optimal</th>
+                <th style={{ padding: '10px 14px', color: '#64748b' }}>Feasibility Status</th>
               </tr>
             </thead>
             <tbody>
@@ -595,11 +595,11 @@ export const OptimizationLabView: React.FC<OptimizationLabViewProps> = ({
                       backgroundColor: isTop ? 'rgba(16, 185, 129, 0.08)' : 'transparent'
                     }}
                   >
-                    <td style={{ padding: '10px 14px', fontWeight: isTop ? 700 : 500, color: '#fff' }}>
+                    <td style={{ padding: '10px 14px', fontWeight: isTop ? 700 : 500, color: '#0f172a' }}>
                       {cand.name}
                       {isTop && <span className="badge badge-green" style={{ marginLeft: '6px', fontSize: '9px' }}>Top</span>}
                     </td>
-                    <td style={{ padding: '10px 14px', color: '#94a3b8' }}>{cand.strategy}</td>
+                    <td style={{ padding: '10px 14px', color: '#64748b' }}>{cand.strategy}</td>
                     <td className="font-mono" style={{ padding: '10px 14px', color: '#38bdf8', fontWeight: 600 }}>
                       {cand.quality_score.toFixed(4)}
                     </td>
