@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  control-plane:
+    build:
+      context: ./services/control-plane
+      dockerfile: Dockerfile
+    container_name: tinyai-control-plane
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8081
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  ml-engine:
+    build:
+      context: .
+      dockerfile: ml-engine/Dockerfile
+    container_name: tinyai-ml-engine
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/app/artifacts
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ARTIFACTS_DIR=/app/artifacts
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tinyai-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - ml-engine
