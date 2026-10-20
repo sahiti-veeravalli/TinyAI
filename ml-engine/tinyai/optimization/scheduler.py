@@ -2,6 +2,8 @@ import os
 import time
 import uuid
 import datetime
+import hashlib
+import pickle
 from typing import Dict, Any, List, Optional, Tuple, Callable
 import numpy as np
 from pydantic import BaseModel, Field
@@ -14,6 +16,17 @@ from ..adapters.distillation import DistillationAdapter
 from ..adapters.model_selection import ModelSelectionAdapter
 from ..benchmarking.benchmarker import ModelBenchmarker, BenchmarkReport
 from .pareto import CandidateEvaluation, ParetoAnalyzer
+
+
+def compute_file_sha256(file_path: Optional[str]) -> Optional[str]:
+    """Calculates SHA-256 cryptographic hash of an artifact for verifiable provenance."""
+    if not file_path or not os.path.exists(file_path):
+        return None
+    h = hashlib.sha256()
+    with open(file_path, "rb") as f:
+        while chunk := f.read(65536):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 class ExperimentManifest(BaseModel):
@@ -85,13 +98,24 @@ class AdaptiveCompressionScheduler:
 
         baseline_qual = baseline_bench.eval_metrics.get(quality_metric, 0.0)
 
+        # Baseline artifact serialization for full cryptographic provenance
+        baseline_art_path = os.path.join(exp_dir, f"{experiment_id}_baseline.pkl")
+        with open(baseline_art_path, "wb") as f:
+            pickle.dump({
+                "model": baseline_wrapper.model,
+                "model_family": baseline_wrapper.model_family,
+                "strategy": "uncompressed_baseline"
+            }, f)
+        baseline_sha = compute_file_sha256(baseline_art_path)
+
         # Baseline as candidate #0
         baseline_cand = CandidateEvaluation(
             candidate_id=f"{experiment_id}_baseline",
             name=f"Baseline ({baseline_wrapper.model_family})",
             strategy="uncompressed_baseline",
             model_family=baseline_wrapper.model_family,
-            artifact_path=None,
+            artifact_path=baseline_art_path,
+            artifact_checksum_sha256=baseline_sha,
             quality_metric_name=quality_metric,
             quality_score=baseline_qual,
             latency_p50_ms=baseline_bench.warm_latency_ms_p50,
@@ -130,7 +154,6 @@ class AdaptiveCompressionScheduler:
                     output_dir=exp_dir
                 )
                 if res.is_successful:
-                    import pickle
                     with open(res.optimized_artifact_path, "rb") as f:
                         q_data = pickle.load(f)
                     bench = ModelBenchmarker.benchmark_model(
@@ -145,6 +168,7 @@ class AdaptiveCompressionScheduler:
                         strategy=res.strategy_name,
                         model_family=baseline_wrapper.model_family,
                         artifact_path=res.optimized_artifact_path,
+                        artifact_checksum_sha256=compute_file_sha256(res.optimized_artifact_path),
                         quality_metric_name=quality_metric,
                         quality_score=bench.eval_metrics.get(quality_metric, 0.0),
                         latency_p50_ms=bench.warm_latency_ms_p50,
@@ -178,7 +202,6 @@ class AdaptiveCompressionScheduler:
                         output_dir=exp_dir
                     )
                     if res.is_successful:
-                        import pickle
                         with open(res.optimized_artifact_path, "rb") as f:
                             p_data = pickle.load(f)
                         bench = ModelBenchmarker.benchmark_model(
@@ -193,6 +216,7 @@ class AdaptiveCompressionScheduler:
                             strategy=res.strategy_name,
                             model_family=baseline_wrapper.model_family,
                             artifact_path=res.optimized_artifact_path,
+                            artifact_checksum_sha256=compute_file_sha256(res.optimized_artifact_path),
                             quality_metric_name=quality_metric,
                             quality_score=bench.eval_metrics.get(quality_metric, 0.0),
                             latency_p50_ms=bench.warm_latency_ms_p50,
@@ -225,7 +249,6 @@ class AdaptiveCompressionScheduler:
                     output_dir=exp_dir
                 )
                 if res.is_successful:
-                    import pickle
                     with open(res.optimized_artifact_path, "rb") as f:
                         d_data = pickle.load(f)
                     bench = ModelBenchmarker.benchmark_model(
@@ -240,6 +263,7 @@ class AdaptiveCompressionScheduler:
                         strategy=res.strategy_name,
                         model_family="student_mlp",
                         artifact_path=res.optimized_artifact_path,
+                        artifact_checksum_sha256=compute_file_sha256(res.optimized_artifact_path),
                         quality_metric_name=quality_metric,
                         quality_score=bench.eval_metrics.get(quality_metric, 0.0),
                         latency_p50_ms=bench.warm_latency_ms_p50,
@@ -272,7 +296,6 @@ class AdaptiveCompressionScheduler:
                     output_dir=exp_dir
                 )
                 if res.is_successful:
-                    import pickle
                     with open(res.optimized_artifact_path, "rb") as f:
                         m_data = pickle.load(f)
                     bench = ModelBenchmarker.benchmark_model(
@@ -288,6 +311,7 @@ class AdaptiveCompressionScheduler:
                         strategy=res.strategy_name,
                         model_family=cand_type,
                         artifact_path=res.optimized_artifact_path,
+                        artifact_checksum_sha256=compute_file_sha256(res.optimized_artifact_path),
                         quality_metric_name=quality_metric,
                         quality_score=bench.eval_metrics.get(quality_metric, 0.0),
                         latency_p50_ms=bench.warm_latency_ms_p50,

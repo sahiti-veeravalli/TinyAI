@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar, NavTab } from './components/Sidebar';
 import { Header } from './components/Header';
+import { ExperimentWorkflowView } from './components/ExperimentWorkflowView';
 import { ToolsHubView } from './components/ToolsHubView';
 import { ToolWorkspaceView } from './components/ToolWorkspaceView';
 import { ProjectsView } from './components/ProjectsView';
@@ -12,12 +13,13 @@ import { DeploymentsSandboxView } from './components/DeploymentsSandboxView';
 import { MonitoringView } from './components/MonitoringView';
 import { ApiSdkView } from './components/ApiSdkView';
 import { DocumentationView } from './components/DocumentationView';
-import { checkBackendHealth, fetchOverview } from './api';
+import { fetchHealthDetails, fetchOverview, HealthStatus } from './api';
 
 export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<NavTab>('overview');
+  const [currentTab, setCurrentTab] = useState<NavTab>('experiment');
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
   const [backendOnline, setBackendOnline] = useState<boolean>(true);
+  const [healthStatus, setHealthStatus] = useState<HealthStatus | null>(null);
   const [overviewData, setOverviewData] = useState<any>(null);
 
   // Cross-page state transfers
@@ -27,9 +29,10 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     const syncStatus = async () => {
-      const isOnline = await checkBackendHealth();
-      setBackendOnline(isOnline);
-      if (isOnline) {
+      const details = await fetchHealthDetails();
+      setHealthStatus(details);
+      setBackendOnline(!!details);
+      if (details) {
         try {
           const ov = await fetchOverview();
           setOverviewData(ov);
@@ -39,7 +42,7 @@ export const App: React.FC = () => {
       }
     };
     syncStatus();
-    const interval = setInterval(syncStatus, 10000);
+    const interval = setInterval(syncStatus, 8000);
     return () => clearInterval(interval);
   }, []);
 
@@ -76,9 +79,6 @@ export const App: React.FC = () => {
     setCurrentTab('model_registry');
   };
 
-  // When on the homepage without an active tool, display full-width iLovePDF layout
-  const isToolsHub = currentTab === 'overview' && !activeToolId;
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100vw', backgroundColor: '#f8fafc', color: '#0f172a' }}>
       <Header
@@ -86,16 +86,15 @@ export const App: React.FC = () => {
         onNavigate={handleNavigateTab}
         onSelectTool={handleSelectTool}
         backendOnline={backendOnline}
+        healthStatus={healthStatus}
       />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        {!isToolsHub && (
-          <Sidebar
-            currentTab={currentTab}
-            onSelectTab={handleNavigateTab}
-            backendOnline={backendOnline}
-          />
-        )}
+        <Sidebar
+          currentTab={currentTab}
+          onSelectTab={handleNavigateTab}
+          backendOnline={backendOnline}
+        />
 
         <main style={{ flex: 1, overflowY: 'auto', backgroundColor: '#f8fafc', height: 'calc(100vh - 64px)' }}>
           {activeToolId ? (
@@ -106,7 +105,13 @@ export const App: React.FC = () => {
             />
           ) : (
             <>
-              {currentTab === 'overview' && (
+              {currentTab === 'experiment' && (
+                <ExperimentWorkflowView
+                  onNavigateTab={handleNavigateTab}
+                />
+              )}
+
+              {(currentTab === 'tools_hub' || currentTab === 'overview') && (
                 <ToolsHubView
                   onSelectTool={handleSelectTool}
                   onNavigateTab={handleNavigateTab}

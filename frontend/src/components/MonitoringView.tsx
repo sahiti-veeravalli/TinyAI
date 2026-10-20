@@ -57,37 +57,65 @@ export const MonitoringView: React.FC = () => {
       {/* Latency & Telemetry Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
         <div className="card" style={{ padding: '18px' }}>
-          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Total Inferences (24h)</span>
+          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Total Inferences Served</span>
           <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-            {metrics?.total_requests_24h ? metrics.total_requests_24h.toLocaleString() : '142,850'}
+            {metrics ? (metrics.total_requests_24h > 0 ? metrics.total_requests_24h.toLocaleString() : '0') : '—'}
           </div>
-          <span style={{ fontSize: '11px', color: '#10b981' }}>Throughput: ~84.5 req/sec</span>
+          <span style={{ fontSize: '11px', color: metrics?.has_traffic ? '#10b981' : '#64748b' }}>
+            {metrics?.has_traffic ? `Throughput: ${metrics.average_throughput_qps} req/sec` : 'Awaiting live traffic'}
+          </span>
         </div>
 
         <div className="card" style={{ padding: '18px' }}>
-          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>p50 Latency SLA</span>
-          <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#22d3ee', margin: '4px 0' }}>
-            {metrics?.latency_p50_ms || 0.42} ms
+          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Measured p50 Latency</span>
+          <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
+            {metrics?.latency_p50_ms !== null && metrics?.latency_p50_ms !== undefined ? `${metrics.latency_p50_ms.toFixed(2)} ms` : '—'}
           </div>
-          <span style={{ fontSize: '11px', color: '#64748b' }}>Target: &lt; 1.0 ms</span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>
+            {metrics?.has_traffic ? 'Empirically timed on CPU' : 'No queries logged yet'}
+          </span>
         </div>
 
         <div className="card" style={{ padding: '18px' }}>
-          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>p99 Latency Tail</span>
-          <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#f59e0b', margin: '4px 0' }}>
-            {metrics?.latency_p99_ms || 1.45} ms
+          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Measured p99 Latency Tail</span>
+          <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
+            {metrics?.latency_p99_ms !== null && metrics?.latency_p99_ms !== undefined ? `${metrics.latency_p99_ms.toFixed(2)} ms` : '—'}
           </div>
-          <span style={{ fontSize: '11px', color: '#64748b' }}>Zero tail timeouts</span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>
+            {metrics?.has_traffic ? 'Tail latency upper bound' : 'Awaiting traffic'}
+          </span>
         </div>
 
         <div className="card" style={{ padding: '18px' }}>
-          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Service Availability</span>
+          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Engine Process Status</span>
           <div className="font-mono" style={{ fontSize: '24px', fontWeight: 800, color: '#10b981', margin: '4px 0' }}>
-            {metrics?.uptime_pct || 99.98}%
+            {metrics ? 'ONLINE' : 'OFFLINE'}
           </div>
-          <span style={{ fontSize: '11px', color: '#10b981' }}>Error rate: {metrics?.error_rate_pct || 0.02}%</span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>
+            {metrics ? `Uptime: ${Math.round(metrics.uptime_seconds || 0)}s | Errors: ${metrics.error_rate_pct || 0}%` : 'Backend unreachable'}
+          </span>
         </div>
       </div>
+
+      {metrics && !metrics.has_traffic && (
+        <div style={{
+          backgroundColor: '#eff6ff',
+          border: '1px solid #bfdbfe',
+          borderRadius: '12px',
+          padding: '14px 18px',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          fontSize: '13px',
+          color: '#1e40af'
+        }}>
+          <Activity size={18} color="#2563eb" style={{ flexShrink: 0 }} />
+          <div>
+            <strong>Telemetry Ready:</strong> {metrics.status_message}
+          </div>
+        </div>
+      )}
 
       {/* Drift Analysis Table */}
       <div className="card" style={{ padding: '24px' }}>

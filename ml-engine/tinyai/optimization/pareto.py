@@ -20,6 +20,7 @@ class CandidateEvaluation(BaseModel):
     is_pareto_optimal: bool = False
     recommendation_score: float = 0.0
     recommendation_rationale: Optional[str] = None
+    artifact_checksum_sha256: Optional[str] = None
     benchmark_details: Dict[str, Any] = Field(default_factory=dict)
 
 

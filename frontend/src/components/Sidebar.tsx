@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 
 export type NavTab =
+  | 'experiment'
+  | 'tools_hub'
   | 'overview'
   | 'projects'
   | 'datasets'
@@ -33,13 +35,14 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, backendOnline }) => {
   const navItems = [
-    { id: 'overview', label: 'All AI Tools', icon: Grid },
-    { id: 'optimization_lab', label: 'Optimization Lab', icon: Sparkles, badge: 'Pareto' },
+    { id: 'experiment', label: 'Experiment Studio', icon: Zap, badge: 'Core Flow' },
+    { id: 'optimization_lab', label: 'Pareto Explorer', icon: Sparkles, badge: 'Trade-offs' },
     { id: 'datasets', label: 'Datasets & Audit', icon: Database },
     { id: 'baselines', label: 'Baseline Training', icon: Layers },
     { id: 'model_registry', label: 'Model Registry', icon: Award },
     { id: 'deployments', label: 'Live Sandbox', icon: Radio },
     { id: 'monitoring', label: 'Drift & Observability', icon: Activity },
+    { id: 'tools_hub', label: 'AI Tools Directory', icon: Grid },
     { id: 'projects', label: 'Workspaces', icon: FolderGit2 },
     { id: 'api_sdk', label: 'Python SDK & CLI', icon: Terminal },
     { id: 'documentation', label: 'Docs & Hardware', icon: BookOpen },

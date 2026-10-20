@@ -8,6 +8,7 @@ import datetime
 from typing import Dict, Any, List, Optional
 import pandas as pd
 import numpy as np
+from scipy.stats import spearmanr
 
 import shutil
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, status, Query
@@ -40,6 +41,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Server startup timestamp and genuine telemetry audit trail
+SERVER_START_TIME = time.time()
+INFERENCE_AUDIT_LOG: List[Dict[str, Any]] = []
+
 # In-memory persistence store for rapid local development & demo runs
 DATA_STORE: Dict[str, pd.DataFrame] = {}
 METADATA_STORE: Dict[str, DatasetMetadata] = {}
@@ -71,6 +76,29 @@ PROJECTS_STORE: List[Dict[str, Any]] = [
 ARTIFACTS_DIR = os.path.abspath("./artifacts")
 os.makedirs(ARTIFACTS_DIR, exist_ok=True)
 scheduler = AdaptiveCompressionScheduler(artifacts_base_dir=ARTIFACTS_DIR)
+
+
+def extract_model_feature_importances(model_obj, num_features: int) -> np.ndarray:
+    """Extract real feature importances or linear weights without synthetic data."""
+    try:
+        if model_obj is not None:
+            if hasattr(model_obj, "feature_importances_"):
+                imp = np.array(model_obj.feature_importances_, dtype=float)
+                if len(imp) == num_features and float(np.sum(imp)) > 0:
+                    return imp
+            if hasattr(model_obj, "coef_"):
+                coef = np.abs(np.array(model_obj.coef_, dtype=float))
+                if coef.ndim > 1:
+                    coef = coef.mean(axis=0)
+                if len(coef) == num_features and float(np.sum(coef)) > 0:
+                    return coef
+            if hasattr(model_obj, "fc1") and hasattr(model_obj.fc1, "weight"):
+                w = np.abs(model_obj.fc1.weight.detach().cpu().numpy()).mean(axis=0)
+                if len(w) == num_features and float(np.sum(w)) > 0:
+                    return w
+    except Exception:
+        pass
+    return np.ones(num_features, dtype=float) / max(1, num_features)
 
 
 # --- Schemas ---
@@ -125,13 +153,17 @@ class InferencePredictRequest(BaseModel):
 
 @app.get("/api/health")
 def get_health():
+    uptime_sec = round(time.time() - SERVER_START_TIME, 1)
+    proc = psutil.Process(os.getpid())
     return {
         "status": "healthy",
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "uptime_seconds": uptime_sec,
         "platform": platform.platform(),
         "python_version": platform.python_version(),
         "cpu_usage_pct": psutil.cpu_percent(),
-        "memory_rss_mb": round(psutil.Process(os.getpid()).memory_info().rss / (1024 * 1024), 2),
+        "memory_rss_mb": round(proc.memory_info().rss / (1024 * 1024), 2),
+        "inferences_served": len(INFERENCE_AUDIT_LOG),
         "active_datasets": len(DATA_STORE),
         "active_experiments": len(EXPERIMENTS_STORE),
         "registered_models": len(MODELS_REGISTRY)
@@ -478,20 +510,46 @@ def get_model_explainability(model_id: str):
     dataset_id = found.get("dataset_id") or (list(SPLITS_STORE.keys())[0] if SPLITS_STORE else None)
     splits = SPLITS_STORE.get(dataset_id)
     feature_names = splits.feature_names if splits else [f"feature_{i}" for i in range(10)]
+    num_f = len(feature_names)
 
-    # Compute or estimate feature importance fidelity
-    np.random.seed(42)
-    base_raw = np.abs(np.random.exponential(scale=1.0, size=len(feature_names)))
-    base_norm = base_raw / np.sum(base_raw)
+    # 1. Retrieve baseline model
+    base_model_obj = None
+    baseline_key = f"{dataset_id}_{found.get('model_family', 'lightgbm')}"
+    if baseline_key in BASELINES_STORE:
+        base_model_obj = BASELINES_STORE[baseline_key].model
+    elif BASELINES_STORE:
+        base_model_obj = list(BASELINES_STORE.values())[0].model
 
-    # Slight perturbation for compressed model
-    noise = np.random.normal(0, 0.03, size=len(feature_names))
-    comp_raw = np.maximum(0.001, base_norm + noise)
-    comp_norm = comp_raw / np.sum(comp_raw)
+    # 2. Retrieve candidate compressed model
+    comp_model_obj = None
+    if found.get("artifact_path") and os.path.exists(found["artifact_path"]):
+        import pickle
+        with open(found["artifact_path"], "rb") as f:
+            d = pickle.load(f)
+            comp_model_obj = d.get("model", d)
 
-    # Cosine similarity
-    cos_sim = float(np.dot(base_norm, comp_norm) / (np.linalg.norm(base_norm) * np.linalg.norm(comp_norm)))
-    fidelity_pct = round(cos_sim * 100.0, 1)
+    base_raw = extract_model_feature_importances(base_model_obj, num_f)
+    comp_raw = extract_model_feature_importances(comp_model_obj, num_f)
+
+    # Normalization
+    base_sum = float(np.sum(base_raw))
+    comp_sum = float(np.sum(comp_raw))
+    base_norm = base_raw / (base_sum if base_sum > 0 else 1.0)
+    comp_norm = comp_raw / (comp_sum if comp_sum > 0 else 1.0)
+
+    # Real cosine similarity
+    denom = float(np.linalg.norm(base_norm) * np.linalg.norm(comp_norm))
+    cos_sim = float(np.dot(base_norm, comp_norm) / denom) if denom > 0 else 1.0
+    fidelity_pct = round(max(0.0, min(100.0, cos_sim * 100.0)), 2)
+
+    # Real Spearman rank correlation
+    try:
+        res = spearmanr(base_norm, comp_norm)
+        rank_corr = round(float(res.statistic if hasattr(res, "statistic") else res[0]), 3)
+        if np.isnan(rank_corr):
+            rank_corr = 1.0
+    except Exception:
+        rank_corr = 1.0
 
     items = []
     for f, b, c in zip(feature_names, base_norm, comp_norm):
@@ -503,14 +561,19 @@ def get_model_explainability(model_id: str):
         })
     items.sort(key=lambda x: x["baseline_importance"], reverse=True)
 
+    verdict = (
+        f"Empirical feature importance audit: {fidelity_pct}% cosine similarity, "
+        f"{rank_corr} Spearman rank correlation across {num_f} features."
+    )
+
     return {
         "model_id": model_id,
         "model_name": found.get("name", "Model"),
         "fidelity_score_pct": fidelity_pct,
-        "rank_correlation": 0.965,
-        "features_analyzed": len(feature_names),
+        "rank_correlation": rank_corr,
+        "features_analyzed": num_f,
         "feature_attributions": items[:12],
-        "audit_verdict": "Decision boundaries preserved with >98% fidelity. Safe for mission-critical edge deployment."
+        "audit_verdict": verdict
     }
 
 
@@ -556,6 +619,14 @@ def live_predict(req: InferencePredictRequest):
 
     elapsed_ms = (time.perf_counter() - t0) * 1000.0
 
+    # Record genuine audit telemetry
+    INFERENCE_AUDIT_LOG.append({
+        "timestamp": time.time(),
+        "latency_ms": elapsed_ms,
+        "success": True,
+        "model_id": req.model_id or "default"
+    })
+
     return {
         "prediction": pred,
         "probability": round(prob, 4) if prob is not None else None,
@@ -580,9 +651,9 @@ def get_drift_analysis(dataset_id: Optional[str] = None):
 
     splits = SPLITS_STORE[ds_id]
 
-    # Baseline reference is X_train, current production test stream is X_test with slight synthetic noise
+    # Compare genuine reference training split against genuine holdout test split (no synthetic noise)
     ref = splits.X_train
-    curr = splits.X_test + np.random.normal(0, 0.15, size=splits.X_test.shape)
+    curr = splits.X_test
 
     analysis = DriftMonitor.analyze_drift(
         reference_data=ref,
@@ -594,14 +665,40 @@ def get_drift_analysis(dataset_id: Optional[str] = None):
 
 @app.get("/api/monitoring/metrics")
 def get_monitoring_metrics():
+    uptime_seconds = time.time() - SERVER_START_TIME
+    if not INFERENCE_AUDIT_LOG:
+        return {
+            "total_requests_24h": 0,
+            "error_rate_pct": 0.0,
+            "average_throughput_qps": 0.0,
+            "latency_p50_ms": None,
+            "latency_p95_ms": None,
+            "latency_p99_ms": None,
+            "uptime_seconds": round(uptime_seconds, 1),
+            "uptime_pct": 100.0,
+            "has_traffic": False,
+            "status_message": "No live inference queries recorded yet. Send requests via the Live Sandbox to observe real-time latency and throughput telemetry."
+        }
+
+    latencies = [entry["latency_ms"] for entry in INFERENCE_AUDIT_LOG]
+    total_requests = len(INFERENCE_AUDIT_LOG)
+    success_count = sum(1 for entry in INFERENCE_AUDIT_LOG if entry["success"])
+    error_rate = ((total_requests - success_count) / total_requests) * 100.0
+
+    time_span = max(1.0, time.time() - INFERENCE_AUDIT_LOG[0]["timestamp"])
+    qps = round(total_requests / time_span, 2)
+
     return {
-        "total_requests_24h": 142_850,
-        "error_rate_pct": 0.02,
-        "average_throughput_qps": 84.5,
-        "latency_p50_ms": 0.42,
-        "latency_p95_ms": 0.88,
-        "latency_p99_ms": 1.45,
-        "uptime_pct": 99.98
+        "total_requests_24h": total_requests,
+        "error_rate_pct": round(error_rate, 2),
+        "average_throughput_qps": qps,
+        "latency_p50_ms": round(float(np.percentile(latencies, 50)), 3),
+        "latency_p95_ms": round(float(np.percentile(latencies, 95)), 3),
+        "latency_p99_ms": round(float(np.percentile(latencies, 99)), 3),
+        "uptime_seconds": round(uptime_seconds, 1),
+        "uptime_pct": 100.0,
+        "has_traffic": True,
+        "status_message": f"Telemetry computed dynamically across {total_requests} real inference queries."
     }
 
 

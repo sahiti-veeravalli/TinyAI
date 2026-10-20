@@ -9,12 +9,40 @@ import {
 
 const API_BASE = '/api';
 
+export interface HealthStatus {
+  status: string;
+  timestamp: string;
+  uptime_seconds: number;
+  platform: string;
+  python_version: string;
+  cpu_usage_pct: number;
+  memory_rss_mb: number;
+  inferences_served: number;
+  active_datasets: number;
+  active_experiments: number;
+  registered_models: number;
+  ping_ms?: number;
+}
+
 export async function checkBackendHealth(): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(2000) });
     return res.ok;
   } catch {
     return false;
+  }
+}
+
+export async function fetchHealthDetails(): Promise<HealthStatus | null> {
+  const t0 = performance.now();
+  try {
+    const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(2500) });
+    if (!res.ok) return null;
+    const data = await res.json();
+    data.ping_ms = Math.round(performance.now() - t0);
+    return data;
+  } catch {
+    return null;
   }
 }
 

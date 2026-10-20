@@ -48,6 +48,7 @@ export interface CandidateEvaluation {
   strategy: string;
   model_family: string;
   artifact_path?: string;
+  artifact_checksum_sha256?: string;
   quality_metric_name: string;
   quality_score: number;
   latency_p50_ms: number;

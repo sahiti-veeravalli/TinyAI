@@ -52,12 +52,14 @@ export const ToolWorkspaceView: React.FC<ToolWorkspaceViewProps> = ({
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [resultData, setResultData] = useState<any>(null);
   const [explainabilityData, setExplainabilityData] = useState<any>(null);
 
   const handleLoadDemo = async () => {
     try {
       setStatusMessage('Loading Point-of-Sale fraud benchmark...');
+      setErrorMessage(null);
       const res = await loadSampleDataset('fraud_detection_benchmark');
       setDatasetId(res.dataset_id);
       setDatasetName(`${res.metadata.name} (${res.metadata.row_count} rows, ${res.metadata.column_count} cols)`);
@@ -65,13 +67,14 @@ export const ToolWorkspaceView: React.FC<ToolWorkspaceViewProps> = ({
       setStatusMessage('Canonical benchmark loaded successfully!');
     } catch (e: any) {
       console.error(e);
-      setStatusMessage('Loaded default fraud dataset.');
+      setErrorMessage('Could not load sample dataset: ' + (e?.message || 'Network error'));
     }
   };
 
   const handleExecuteTool = async () => {
     setIsRunning(true);
     setIsCompleted(false);
+    setErrorMessage(null);
     setStatusMessage(`Running ${tool.name}...`);
 
     try {
@@ -113,33 +116,9 @@ export const ToolWorkspaceView: React.FC<ToolWorkspaceViewProps> = ({
       setStatusMessage('Optimization successfully finished!');
     } catch (e: any) {
       console.error(e);
-      // Fallback realistic demonstration results if backend is initializing
-      setResultData({
-        baseline: {
-          model_name: 'LightGBM Full Ensemble',
-          quality_score: 0.9412,
-          quality_metric: 'PR-AUC',
-          latency_p50_ms: 0.452,
-          disk_size_kb: 185.4,
-          memory_rss_mb: 88.4
-        },
-        candidate: {
-          name: tool.id === 'quantize'
-            ? 'LightGBM Float16 Quantized'
-            : tool.id === 'prune'
-            ? 'LightGBM 40% Sparsity Pruned'
-            : tool.id === 'distill'
-            ? 'Student Distilled Neural Net'
-            : 'Pareto-Optimal Pruned Ensemble',
-          quality_score: 0.9388,
-          latency_p50_ms: 0.295,
-          disk_size_kb: 74.1,
-          compression_ratio: 2.50,
-          quality_retained_pct: 99.7
-        },
-        modelId: 'mod_canonical_pruned'
-      });
-      setIsCompleted(true);
+      setErrorMessage(e?.message || 'Optimization request failed on the ML backend engine.');
+      setResultData(null);
+      setIsCompleted(false);
     } finally {
       setIsRunning(false);
     }
@@ -439,7 +418,11 @@ export const ToolWorkspaceView: React.FC<ToolWorkspaceViewProps> = ({
               Your AI Model has been Optimized!
             </h2>
             <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }}>
-              The compressed candidate model satisfies your edge constraints and retains 99.7% of predictive quality.
+              The compressed candidate model satisfies your edge constraints and retains{' '}
+              {resultData.candidate.quality_retained_pct
+                ? resultData.candidate.quality_retained_pct.toFixed(1)
+                : ((resultData.candidate.quality_score / (resultData.baseline?.quality_score || 1)) * 100).toFixed(1)}
+              % of baseline predictive quality.
             </p>
 
             {/* Before vs After Comparison Cards */}
@@ -460,12 +443,14 @@ export const ToolWorkspaceView: React.FC<ToolWorkspaceViewProps> = ({
                   <span style={{ fontSize: '22px', fontWeight: 900, color: '#0f172a' }}>
                     {resultData.candidate.disk_size_kb.toFixed(1)} KB
                   </span>
-                  <span style={{ fontSize: '12px', textDecoration: 'line-through', color: '#94a3b8' }}>
-                    185.4 KB
-                  </span>
+                  {resultData.baseline?.disk_size_kb && (
+                    <span style={{ fontSize: '12px', textDecoration: 'line-through', color: '#94a3b8' }}>
+                      {resultData.baseline.disk_size_kb.toFixed(1)} KB
+                    </span>
+                  )}
                 </div>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: '#059669' }}>
-                  ↓ 2.5x Smaller (60% saved)
+                  ↓ {resultData.candidate.compression_ratio ? resultData.candidate.compression_ratio.toFixed(2) : (resultData.baseline?.disk_size_kb ? (resultData.baseline.disk_size_kb / resultData.candidate.disk_size_kb).toFixed(2) : '1.0')}x Smaller
                 </span>
               </div>
 
@@ -478,30 +463,34 @@ export const ToolWorkspaceView: React.FC<ToolWorkspaceViewProps> = ({
                   <span style={{ fontSize: '22px', fontWeight: 900, color: '#0f172a' }}>
                     {resultData.candidate.latency_p50_ms.toFixed(3)} ms
                   </span>
-                  <span style={{ fontSize: '12px', textDecoration: 'line-through', color: '#94a3b8' }}>
-                    0.452 ms
-                  </span>
+                  {resultData.baseline?.latency_p50_ms && (
+                    <span style={{ fontSize: '12px', textDecoration: 'line-through', color: '#94a3b8' }}>
+                      {resultData.baseline.latency_p50_ms.toFixed(3)} ms
+                    </span>
+                  )}
                 </div>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: '#2563eb' }}>
-                  ⚡ Sub-0.30 ms edge time
+                  ⚡ {resultData.baseline?.latency_p50_ms ? (resultData.baseline.latency_p50_ms / resultData.candidate.latency_p50_ms).toFixed(2) : '1.0'}x Latency Speedup
                 </span>
               </div>
 
               {/* Quality */}
               <div style={{ padding: '18px', borderRadius: '12px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}>
                 <span style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
-                  PR-AUC Quality
+                  {resultData.baseline?.quality_metric || 'Quality Metric'}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '8px 0 4px' }}>
                   <span style={{ fontSize: '22px', fontWeight: 900, color: '#0f172a' }}>
                     {resultData.candidate.quality_score.toFixed(4)}
                   </span>
-                  <span style={{ fontSize: '12px', textDecoration: 'line-through', color: '#94a3b8' }}>
-                    0.9412
-                  </span>
+                  {resultData.baseline?.quality_score && (
+                    <span style={{ fontSize: '12px', textDecoration: 'line-through', color: '#94a3b8' }}>
+                      {resultData.baseline.quality_score.toFixed(4)}
+                    </span>
+                  )}
                 </div>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: '#7c3aed' }}>
-                  ✓ 99.7% Quality Preserved
+                  ✓ {((resultData.candidate.quality_score / (resultData.baseline?.quality_score || 1)) * 100).toFixed(1)}% Retained
                 </span>
               </div>
             </div>
