@@ -45,6 +45,7 @@ class ExperimentManifest(BaseModel):
     recommended_candidate: Optional[CandidateEvaluation] = None
     priority: str
     hardware_environment: Dict[str, Any]
+    objective_prompt: Optional[str] = None
 
 
 class AdaptiveCompressionScheduler:
@@ -71,7 +72,8 @@ class AdaptiveCompressionScheduler:
         constraints: Dict[str, Any],
         priority: str = "balanced",
         enabled_strategies: Optional[List[str]] = None,
-        progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None
+        progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+        objective_prompt: Optional[str] = None
     ) -> ExperimentManifest:
         """Executes full multi-strategy compression experiments, measures real benchmarks, and extracts the Pareto frontier."""
         exp_dir = os.path.join(self.artifacts_base_dir, experiment_id)
@@ -351,7 +353,8 @@ class AdaptiveCompressionScheduler:
             pareto_frontier=pareto_list,
             recommended_candidate=top_recommended,
             priority=priority,
-            hardware_environment=baseline_bench.environment
+            hardware_environment=baseline_bench.environment,
+            objective_prompt=objective_prompt
         )
 
         manifest_path = os.path.join(exp_dir, "manifest.json")

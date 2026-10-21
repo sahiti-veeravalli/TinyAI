@@ -1,171 +1,160 @@
 import React, { useState, useEffect } from 'react';
-import { Sidebar, NavTab } from './components/Sidebar';
-import { Header } from './components/Header';
-import { ExperimentWorkflowView } from './components/ExperimentWorkflowView';
-import { ToolsHubView } from './components/ToolsHubView';
-import { ToolWorkspaceView } from './components/ToolWorkspaceView';
-import { ProjectsView } from './components/ProjectsView';
-import { DatasetsView } from './components/DatasetsView';
-import { BaselinesView } from './components/BaselinesView';
-import { OptimizationLabView } from './components/OptimizationLabView';
-import { ModelRegistryView } from './components/ModelRegistryView';
-import { DeploymentsSandboxView } from './components/DeploymentsSandboxView';
-import { MonitoringView } from './components/MonitoringView';
-import { ApiSdkView } from './components/ApiSdkView';
-import { DocumentationView } from './components/DocumentationView';
-import { fetchHealthDetails, fetchOverview, HealthStatus } from './api';
+import { Header, WorkspaceTab } from './components/Header';
+import { Sidebar } from './components/Sidebar';
+import { ModelsWorkspaceView } from './components/ModelsWorkspaceView';
+import { RunsWorkspaceView } from './components/RunsWorkspaceView';
+import { ResultsWorkspaceView } from './components/ResultsWorkspaceView';
+import { ReleasesWorkspaceView } from './components/ReleasesWorkspaceView';
+import {
+  fetchHealthDetails,
+  fetchModels,
+  fetchExperiments,
+  HealthStatus
+} from './api';
+import { ModelEntry, ExperimentManifest } from './types';
 
 export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<NavTab>('experiment');
-  const [activeToolId, setActiveToolId] = useState<string | null>(null);
+  // Navigation & Workspace State
+  const [currentTab, setCurrentTab] = useState<WorkspaceTab>('runs');
+  const [activeModel, setActiveModel] = useState<ModelEntry | null>(null);
+  const [currentManifest, setCurrentManifest] = useState<ExperimentManifest | null>(null);
+  const [selectedReleaseModelId, setSelectedReleaseModelId] = useState<string | undefined>(undefined);
+
+  // System & Health State
   const [backendOnline, setBackendOnline] = useState<boolean>(true);
   const [healthStatus, setHealthStatus] = useState<HealthStatus | null>(null);
-  const [overviewData, setOverviewData] = useState<any>(null);
+  const [modelsCount, setModelsCount] = useState<number>(0);
+  const [runsCount, setRunsCount] = useState<number>(0);
 
-  // Cross-page state transfers
-  const [selectedDatasetId, setSelectedDatasetId] = useState<string>('');
-  const [selectedBaselineFamily, setSelectedBaselineFamily] = useState<string>('lightgbm');
-  const [selectedTargetCol, setSelectedTargetCol] = useState<string>('is_fraud');
+  // Theme State
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('tinyai_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return 'light'; // Default direction is warm-neutral light
+  });
 
   useEffect(() => {
-    const syncStatus = async () => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('tinyai_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  useEffect(() => {
+    const syncStatusAndWorkspace = async () => {
       const details = await fetchHealthDetails();
       setHealthStatus(details);
       setBackendOnline(!!details);
+
       if (details) {
         try {
-          const ov = await fetchOverview();
-          setOverviewData(ov);
+          const [modelsList, experimentsList] = await Promise.all([
+            fetchModels(),
+            fetchExperiments()
+          ]);
+          setModelsCount(modelsList.length);
+          setRunsCount(experimentsList.length);
+
+          if (!activeModel && modelsList.length > 0) {
+            setActiveModel(modelsList[0]);
+          }
+
+          if (!currentManifest && experimentsList.length > 0) {
+            setCurrentManifest(experimentsList[0]);
+          }
         } catch (e) {
-          console.error(e);
+          console.error('Error fetching workspace counts:', e);
         }
       }
     };
-    syncStatus();
-    const interval = setInterval(syncStatus, 8000);
+
+    syncStatusAndWorkspace();
+    const interval = setInterval(syncStatusAndWorkspace, 10000);
     return () => clearInterval(interval);
   }, []);
 
-  const handleSelectTool = (toolId: string) => {
-    setActiveToolId(toolId);
+  const handleSelectModelForRun = (model: ModelEntry) => {
+    setActiveModel(model);
+    setCurrentTab('runs');
   };
 
-  const handleBackFromTool = () => {
-    setActiveToolId(null);
+  const handleExperimentComplete = (manifest: ExperimentManifest) => {
+    setCurrentManifest(manifest);
+    setRunsCount(prev => prev + 1);
   };
 
-  const handleNavigateTab = (tab: NavTab) => {
-    setActiveToolId(null);
-    setCurrentTab(tab);
-  };
-
-  const handleDatasetSelectForBaseline = (datasetId: string, targetCol: string) => {
-    setSelectedDatasetId(datasetId);
-    setSelectedTargetCol(targetCol);
-    setActiveToolId(null);
-    setCurrentTab('baselines');
-  };
-
-  const handleBaselineSelectForOptimization = (datasetId: string, modelFamily: string, targetCol: string) => {
-    setSelectedDatasetId(datasetId);
-    setSelectedBaselineFamily(modelFamily);
-    setSelectedTargetCol(targetCol);
-    setActiveToolId(null);
-    setCurrentTab('optimization_lab');
-  };
-
-  const handlePromoteToRegistry = () => {
-    setActiveToolId(null);
-    setCurrentTab('model_registry');
+  const handlePromoteToRelease = (modelId: string) => {
+    setSelectedReleaseModelId(modelId);
+    setCurrentTab('releases');
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100vw', backgroundColor: '#f8fafc', color: '#0f172a' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+      width: '100vw',
+      backgroundColor: 'var(--bg-app)',
+      color: 'var(--text-main)',
+      overflow: 'hidden'
+    }}>
       <Header
         currentTab={currentTab}
-        onNavigate={handleNavigateTab}
-        onSelectTool={handleSelectTool}
+        onNavigate={setCurrentTab}
         backendOnline={backendOnline}
         healthStatus={healthStatus}
+        activeModelName={activeModel?.name}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <Sidebar
           currentTab={currentTab}
-          onSelectTab={handleNavigateTab}
-          backendOnline={backendOnline}
+          onSelectTab={setCurrentTab}
+          modelsCount={modelsCount}
+          runsCount={runsCount}
+          resultsAvailable={!!currentManifest}
+          releasesCount={modelsCount}
         />
 
-        <main style={{ flex: 1, overflowY: 'auto', backgroundColor: '#f8fafc', height: 'calc(100vh - 64px)' }}>
-          {activeToolId ? (
-            <ToolWorkspaceView
-              toolId={activeToolId}
-              onBack={handleBackFromTool}
-              onNavigateTab={handleNavigateTab}
+        <main style={{
+          flex: 1,
+          overflowY: 'auto',
+          backgroundColor: 'var(--bg-app)',
+          height: 'calc(100vh - 56px)'
+        }}>
+          {currentTab === 'models' && (
+            <ModelsWorkspaceView
+              onSelectModelForRun={handleSelectModelForRun}
+              onNavigateTab={setCurrentTab}
             />
-          ) : (
-            <>
-              {currentTab === 'experiment' && (
-                <ExperimentWorkflowView
-                  onNavigateTab={handleNavigateTab}
-                />
-              )}
+          )}
 
-              {(currentTab === 'tools_hub' || currentTab === 'overview') && (
-                <ToolsHubView
-                  onSelectTool={handleSelectTool}
-                  onNavigateTab={handleNavigateTab}
-                />
-              )}
+          {currentTab === 'runs' && (
+            <RunsWorkspaceView
+              activeModel={activeModel}
+              onSelectModel={setActiveModel}
+              onNavigateTab={setCurrentTab}
+              onExperimentComplete={handleExperimentComplete}
+            />
+          )}
 
-              {currentTab === 'projects' && (
-                <ProjectsView
-                  onNavigate={handleNavigateTab}
-                  projects={overviewData?.projects || []}
-                />
-              )}
+          {currentTab === 'results' && (
+            <ResultsWorkspaceView
+              manifest={currentManifest}
+              onNavigateTab={setCurrentTab}
+              onPromoteToRelease={handlePromoteToRelease}
+            />
+          )}
 
-              {currentTab === 'datasets' && (
-                <DatasetsView
-                  onDatasetSelect={handleDatasetSelectForBaseline}
-                />
-              )}
-
-              {currentTab === 'baselines' && (
-                <BaselinesView
-                  onSelectBaselineForOptimization={handleBaselineSelectForOptimization}
-                />
-              )}
-
-              {currentTab === 'optimization_lab' && (
-                <OptimizationLabView
-                  initialDatasetId={selectedDatasetId}
-                  initialBaselineFamily={selectedBaselineFamily}
-                  initialTargetCol={selectedTargetCol}
-                  onPromoteToRegistry={handlePromoteToRegistry}
-                />
-              )}
-
-              {currentTab === 'model_registry' && (
-                <ModelRegistryView />
-              )}
-
-              {currentTab === 'deployments' && (
-                <DeploymentsSandboxView />
-              )}
-
-              {currentTab === 'monitoring' && (
-                <MonitoringView />
-              )}
-
-              {currentTab === 'api_sdk' && (
-                <ApiSdkView />
-              )}
-
-              {currentTab === 'documentation' && (
-                <DocumentationView />
-              )}
-            </>
+          {currentTab === 'releases' && (
+            <ReleasesWorkspaceView
+              initialModelId={selectedReleaseModelId}
+              onNavigateTab={setCurrentTab}
+            />
           )}
         </main>
       </div>

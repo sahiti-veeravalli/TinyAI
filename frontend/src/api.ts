@@ -4,7 +4,10 @@ import {
   ExperimentManifest,
   ModelEntry,
   DatasetDriftAnalysis,
-  HardwarePreset
+  HardwarePreset,
+  ParsedObjective,
+  SampleModelCatalogItem,
+  ExportBundleResponse
 } from './types';
 
 const API_BASE = '/api';
@@ -88,6 +91,46 @@ export async function trainBaseline(datasetId: string, targetColumn: string, mod
   return res.json();
 }
 
+export async function parseObjective(prompt: string, currentConstraints?: Record<string, any>): Promise<ParsedObjective> {
+  const res = await fetch(`${API_BASE}/experiments/parse-objective`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt, current_constraints: currentConstraints })
+  });
+  if (!res.ok) throw new Error('Failed to interpret objective prompt');
+  return res.json();
+}
+
+export async function fetchSampleCatalog(): Promise<SampleModelCatalogItem[]> {
+  const res = await fetch(`${API_BASE}/models/sample-catalog`);
+  if (!res.ok) throw new Error('Failed to fetch sample models catalog');
+  return res.json();
+}
+
+export async function loadSampleModel(sampleId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/models/load-sample`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sample_id: sampleId })
+  });
+  if (!res.ok) throw new Error('Failed to load sample model');
+  return res.json();
+}
+
+export async function uploadModel(file: File): Promise<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch(`${API_BASE}/models/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Model upload validation failed' }));
+    throw new Error(err.detail || 'Model upload validation failed');
+  }
+  return res.json();
+}
+
 export async function launchOptimization(params: {
   dataset_id: string;
   target_column: string;
@@ -95,15 +138,20 @@ export async function launchOptimization(params: {
   max_disk_size_kb?: number;
   max_latency_ms?: number;
   min_quality_score?: number;
+  max_memory_mb?: number;
   priority: string;
   enabled_strategies: string[];
+  objective_prompt?: string;
 }): Promise<ExperimentManifest> {
   const res = await fetch(`${API_BASE}/experiments/launch`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params)
   });
-  if (!res.ok) throw new Error('Failed to launch optimization experiment');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Failed to launch optimization experiment' }));
+    throw new Error(err.detail || 'Failed to launch optimization experiment');
+  }
   return res.json();
 }
 
@@ -119,7 +167,7 @@ export async function fetchModels(): Promise<ModelEntry[]> {
   return res.json();
 }
 
-export async function exportModelBundle(modelId: string): Promise<any> {
+export async function exportModelBundle(modelId: string): Promise<ExportBundleResponse> {
   const res = await fetch(`${API_BASE}/models/${modelId}/export`, { method: 'POST' });
   if (!res.ok) throw new Error('Failed to export model deployment bundle');
   return res.json();

@@ -97,3 +97,28 @@ def test_recommendation_ranking():
     assert top.candidate_id == "1"
     assert top.recommendation_rationale is not None
     assert "Selected under 'balanced' optimization strategy" in top.recommendation_rationale
+
+
+def test_infeasible_candidate_ranking_honest_rationale():
+    cand_viol = CandidateEvaluation(
+        candidate_id="bad",
+        name="Heavy Candidate",
+        strategy="quant",
+        model_family="lightgbm",
+        quality_metric_name="roc_auc",
+        quality_score=0.75,
+        latency_p50_ms=5.0,
+        disk_size_kb=800.0,
+        memory_rss_mb=120.0,
+        compression_ratio=1.0,
+        is_feasible=False,
+        constraint_violations=[
+            "Disk size 800.0KB exceeds limit of 250.0KB",
+            "Latency 5.000ms exceeds limit of 1.000ms"
+        ]
+    )
+    top, ranked = ParetoAnalyzer.rank_and_recommend([cand_viol], priority="lowest_latency")
+    assert top is not None
+    assert top.is_feasible is False
+    assert "No candidate met all hard operational constraints" in top.recommendation_rationale
+    assert "Hard constraints were not relaxed" in top.recommendation_rationale

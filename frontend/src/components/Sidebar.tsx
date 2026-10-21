@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-  Grid,
-  FolderGit2,
-  Database,
   Layers,
-  Sparkles,
-  Award,
-  Radio,
-  Activity,
-  Terminal,
-  BookOpen,
-  Zap
+  PlayCircle,
+  BarChart3,
+  PackageCheck,
+  Cpu,
+  Info,
+  FolderGit2
 } from 'lucide-react';
+import { WorkspaceTab } from './Header';
 
 export type NavTab =
+  | WorkspaceTab
   | 'experiment'
   | 'tools_hub'
   | 'overview'
@@ -28,125 +26,172 @@ export type NavTab =
   | 'documentation';
 
 interface SidebarProps {
-  currentTab: NavTab;
-  onSelectTab: (tab: NavTab) => void;
-  backendOnline: boolean;
+  currentTab: WorkspaceTab;
+  onSelectTab: (tab: WorkspaceTab) => void;
+  modelsCount?: number;
+  runsCount?: number;
+  resultsAvailable?: boolean;
+  releasesCount?: number;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, backendOnline }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  currentTab,
+  onSelectTab,
+  modelsCount = 0,
+  runsCount = 0,
+  resultsAvailable = false,
+  releasesCount = 0
+}) => {
   const navItems = [
-    { id: 'experiment', label: 'Experiment Studio', icon: Zap, badge: 'Core Flow' },
-    { id: 'optimization_lab', label: 'Pareto Explorer', icon: Sparkles, badge: 'Trade-offs' },
-    { id: 'datasets', label: 'Datasets & Audit', icon: Database },
-    { id: 'baselines', label: 'Baseline Training', icon: Layers },
-    { id: 'model_registry', label: 'Model Registry', icon: Award },
-    { id: 'deployments', label: 'Live Sandbox', icon: Radio },
-    { id: 'monitoring', label: 'Drift & Observability', icon: Activity },
-    { id: 'tools_hub', label: 'AI Tools Directory', icon: Grid },
-    { id: 'projects', label: 'Workspaces', icon: FolderGit2 },
-    { id: 'api_sdk', label: 'Python SDK & CLI', icon: Terminal },
-    { id: 'documentation', label: 'Docs & Hardware', icon: BookOpen },
+    {
+      id: 'models' as WorkspaceTab,
+      label: 'Models',
+      description: 'Imported models & pre-flight audit',
+      icon: Layers,
+      count: modelsCount > 0 ? modelsCount : undefined
+    },
+    {
+      id: 'runs' as WorkspaceTab,
+      label: 'Runs',
+      description: 'Objectives & optimization execution',
+      icon: PlayCircle,
+      count: runsCount > 0 ? runsCount : undefined
+    },
+    {
+      id: 'results' as WorkspaceTab,
+      label: 'Results',
+      description: 'Candidate comparison & Pareto frontier',
+      icon: BarChart3,
+      badge: resultsAvailable ? 'Ready' : undefined
+    },
+    {
+      id: 'releases' as WorkspaceTab,
+      label: 'Releases',
+      description: 'Verified bundles & live edge test',
+      icon: PackageCheck,
+      count: releasesCount > 0 ? releasesCount : undefined
+    }
   ];
 
   return (
     <aside style={{
       width: '240px',
-      backgroundColor: '#ffffff',
-      borderRight: '1px solid #e2e8f0',
+      backgroundColor: 'var(--bg-surface)',
+      borderRight: '1px solid var(--border-subtle)',
       display: 'flex',
       flexDirection: 'column',
       flexShrink: 0,
       userSelect: 'none',
-      height: 'calc(100vh - 64px)'
+      height: 'calc(100vh - 56px)'
     }}>
-      {/* Navigation List */}
-      <nav style={{ padding: '16px 12px', flex: 1, overflowY: 'auto' }}>
+      {/* Workspace Section Header */}
+      <div style={{ padding: '16px 14px 8px' }}>
         <div style={{
           fontSize: '11px',
           fontWeight: 700,
           textTransform: 'uppercase',
-          color: '#94a3b8',
-          padding: '0 12px 10px',
-          letterSpacing: '0.06em'
+          color: 'var(--text-muted)',
+          letterSpacing: '0.05em',
+          padding: '0 8px 8px'
         }}>
-          Navigation
+          Workspace
         </div>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentTab === item.id;
-            return (
-              <li key={item.id}>
-                <button
-                  onClick={() => onSelectTab(item.id as NavTab)}
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '9px 12px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    backgroundColor: isActive ? '#fef2f2' : 'transparent',
-                    color: isActive ? '#e5322d' : '#475569',
-                    fontSize: '13.5px',
-                    fontWeight: isActive ? 700 : 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.backgroundColor = '#f8fafc';
-                      e.currentTarget.style.color = '#0f172a';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = '#475569';
-                    }
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Icon size={17} color={isActive ? '#e5322d' : '#64748b'} />
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span style={{
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      color: isActive ? '#e5322d' : '#64748b',
-                      backgroundColor: isActive ? '#fee2e2' : '#f1f5f9',
-                      padding: '2px 6px',
-                      borderRadius: '6px'
-                    }}>
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
 
-      {/* Edge System Summary Box at bottom */}
+        <nav>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => onSelectTab(item.id)}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '8px 10px',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid',
+                      borderColor: isActive ? 'var(--border-medium)' : 'transparent',
+                      backgroundColor: isActive ? 'var(--bg-subtle)' : 'transparent',
+                      color: isActive ? 'var(--text-main)' : 'var(--text-secondary)',
+                      fontSize: '13.5px',
+                      fontWeight: isActive ? 600 : 500,
+                      cursor: 'pointer',
+                      transition: 'all 0.12s ease',
+                      textAlign: 'left'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
+                        e.currentTarget.style.color = 'var(--text-main)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = 'var(--text-secondary)';
+                      }
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+                      <Icon
+                        size={16}
+                        color={isActive ? 'var(--accent-primary)' : 'var(--text-muted)'}
+                      />
+                      <span>{item.label}</span>
+                    </div>
+
+                    {item.count !== undefined && (
+                      <span style={{
+                        fontSize: '11px',
+                        padding: '1px 6px',
+                        borderRadius: '9999px',
+                        backgroundColor: isActive ? 'var(--accent-primary-subtle)' : 'var(--bg-muted)',
+                        color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)',
+                        fontWeight: 600
+                      }}>
+                        {item.count}
+                      </span>
+                    )}
+
+                    {item.badge && (
+                      <span className="badge badge-orange" style={{ fontSize: '10px', padding: '1px 6px' }}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+
+      {/* Bottom info section */}
       <div style={{
+        marginTop: 'auto',
         padding: '14px',
-        margin: '12px',
-        backgroundColor: '#f8fafc',
-        borderRadius: '10px',
-        border: '1px solid #e2e8f0',
-        fontSize: '11px',
-        color: '#64748b'
+        borderTop: '1px solid var(--border-subtle)',
+        backgroundColor: 'var(--bg-surface)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
-          <Zap size={13} color="#e5322d" />
-          <span>Local Engine Active</span>
-        </div>
-        <div>ARM Cortex-M &amp; RPi4 ready</div>
-        <div style={{ marginTop: '6px', color: '#059669', fontWeight: 600 }}>
-          ● All 4 compression tiers enabled
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '8px 10px',
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: 'var(--bg-subtle)',
+          fontSize: '11.5px',
+          color: 'var(--text-muted)'
+        }}>
+          <Cpu size={14} color="var(--text-secondary)" />
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.25 }}>
+            <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Host Hardware Engine</span>
+            <span>Local microsecond timers</span>
+          </div>
         </div>
       </div>
     </aside>

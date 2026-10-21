@@ -115,8 +115,10 @@ class ParetoAnalyzer:
     ) -> Tuple[Optional[CandidateEvaluation], List[CandidateEvaluation]]:
         """Ranks feasible candidates according to stated user deployment priority and returns the top recommendation with clear rationale."""
         feasible = [c for c in candidates if c.is_feasible]
+        all_infeasible = False
         if not feasible:
             # If none are strictly feasible, rank all candidates by lowest violation count
+            all_infeasible = True
             feasible = sorted(candidates, key=lambda c: len(c.constraint_violations))
             if not feasible:
                 return None, []
@@ -152,10 +154,17 @@ class ParetoAnalyzer:
         ranked = sorted(feasible, key=lambda c: c.recommendation_score, reverse=True)
         top = ranked[0]
 
-        top.recommendation_rationale = (
-            f"Selected under '{priority}' optimization strategy because it achieved {top.quality_score:.3f} {top.quality_metric_name} "
-            f"with ultra-fast {top.latency_p50_ms:.3f}ms p50 latency and compact {top.disk_size_kb:.1f}KB footprint "
-            f"({top.compression_ratio:.1f}x compression over baseline), strictly satisfying all operational constraints."
-        )
+        if all_infeasible:
+            top.recommendation_rationale = (
+                f"No candidate met all hard operational constraints. '{top.name}' is ranked as the closest candidate "
+                f"with {len(top.constraint_violations)} violation(s): {'; '.join(top.constraint_violations)}. "
+                f"Hard constraints were not relaxed. Adjust latency SLA or size budgets to find a feasible solution."
+            )
+        else:
+            top.recommendation_rationale = (
+                f"Selected under '{priority}' optimization strategy because it achieved {top.quality_score:.3f} {top.quality_metric_name} "
+                f"with ultra-fast {top.latency_p50_ms:.3f}ms p50 latency and compact {top.disk_size_kb:.1f}KB footprint "
+                f"({top.compression_ratio:.1f}x compression over baseline), strictly satisfying all operational constraints."
+            )
 
         return top, ranked

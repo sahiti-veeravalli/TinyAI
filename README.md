@@ -1,63 +1,58 @@
-# TinyAI — Edge Intelligence & Tabular Model Optimization Platform
+# TinyAI — Replit-Inspired Edge ML Optimization Workspace
 
-> **Domain-aware, budget-constrained compression of tabular machine-learning models for edge and micro-runtimes.**
+> **"Can I make this model fit my deployment constraints without sacrificing more predictive quality than I can afford?"**
 
----
-
-## 1. Executive Overview
-
-**TinyAI** is a production-minded AI model optimization platform engineered specifically for tabular machine learning workflows. While the broader industry focuses on generative LLM quantization, thousands of high-throughput real-world applications—such as point-of-sale fraud detection, industrial IoT sensor monitoring, and edge autonomous systems—depend on compact, ultra-low-latency tabular models operating under strict physical resource limits (e.g., `< 250 KB` disk footprint, `< 1.0 ms` p50 latency, and `< 100 MB` RAM).
-
-TinyAI solves this through an **Adaptive Compression Scheduler** that systematically explores quantization, structural ensemble pruning, soft-target knowledge distillation, and compact alternative architectures, automatically extracting the non-dominated **Pareto Frontier** and selecting the optimal trade-off with transparent engineering rationale.
+TinyAI is a specialized, production-minded workspace for optimizing, benchmarking, and preparing machine learning models for resource-constrained edge deployments. Inspired by the usability, confidence, and progressive disclosure of Replit, TinyAI delivers a prompt-first, conversational entry point grounded in empirical hardware measurements.
 
 ---
 
-## 2. System Architecture
+## 1. Product Workspaces
 
-```mermaid
-graph TD
-    UI[Frontend: React 18 + TypeScript + Dark-First Design System] -->|REST / OpenAPI| API[FastAPI ML Engine & Optimization Server]
-    UI -.->|Enterprise Auth & Governance| CP[Java 17 Spring Boot Control Plane]
-    CP --> DB[(PostgreSQL / H2 + Flyway)]
+The product is organized around four core workspaces:
 
-    API --> DATA[Dataset Ingestion & Leakage Inspector]
-    API --> BASE[Baseline Training Engine]
-    API --> SCHED[Adaptive Compression Scheduler]
-    API --> BENCH[Micro-Benchmark Laboratory]
-    API --> EXPORT[Deployment Packager]
-    API --> MON[Kolmogorov-Smirnov & PSI Drift Monitor]
-
-    SCHED --> ADAPT_Q[Quantization: Float16 / Dynamic Int8]
-    SCHED --> ADAPT_P[Structural Pruning: Tree Truncation & L1 Sparsity]
-    SCHED --> ADAPT_D[Knowledge Distillation: Temperature Soft-Target]
-    SCHED --> ADAPT_M[Model Selection: Regularized L1 & Shallow Trees]
-
-    EXPORT --> BUNDLE[Self-Contained Edge Docker Container + FastAPI Service]
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                               TinyAI                                   │
+├──────────────┬──────────────────┬─────────────────┬────────────────────┤
+│  1. MODELS   │     2. RUNS      │   3. RESULTS    │    4. RELEASES     │
+│  Imported    │  Conversational  │  Hero Candidate │  Exported Bundles  │
+│  Artifacts & │  Objective &     │  Comparison &   │  Checksums, Code & │
+│  Pre-flight  │  Optimization    │  Pareto Frontier│  Inference Sandbox │
+│  Validation  │  Execution       │  Analysis       │                    │
+└──────────────┴──────────────────┴─────────────────┴────────────────────┘
 ```
 
-### Key Services & Modules
-1. **Frontend (`/frontend`)**:
-   - Modern dark-first reactive UI with glassmorphism, responsive sidebar, high-density data visualizations, interactive Pareto Frontier scatter chart, and real-time edge prediction sandbox.
-   - Built with Vite, React 18, TypeScript (strict mode), Lucide icons, responsive CSS design tokens.
-2. **Python ML Engine (`/ml-engine/tinyai`)**:
-   - `tinyai/data`: Ingestion (CSV/Parquet), safe parsing, fingerprinting (SHA-256), missingness profiling, class imbalance analysis, data leakage alerts, train/validation/test stratified splitting.
-   - `tinyai/models`: Baseline models (Logistic Regression, Random Forest, LightGBM, XGBoost, and Tabular MLP Neural Network) with ROC-AUC, PR-AUC, F1, and log-loss evaluation.
-   - `tinyai/adapters`: Unified `BaseAdapter` interface with Quantization, Pruning, Distillation, and Compact Model Selection adapters.
-   - `tinyai/optimization`: `AdaptiveCompressionScheduler` evaluating multi-objective trade-offs (Quality vs Size vs Latency vs Memory) with Pareto frontier extraction and transparent recommendation rationale.
-   - `tinyai/benchmarking`: Real hardware benchmark engine measuring disk size, memory RSS peak, warm/cold latency (p50, p95, p99), throughput (samples/sec).
-   - `tinyai/export`: 1-click export of production bundle (FastAPI service, Dockerfile, input schema, load test script, model card).
-   - `tinyai/monitoring`: Statistical drift detection (Kolmogorov-Smirnov test, Population Stability Index / PSI) & runtime latency distribution.
-3. **Enterprise Control Plane (`/services/control-plane`)**:
-   - Java 17 + Spring Boot 3.2 + Spring Data JPA + Flyway database migrations for project workspaces, governance, API keys, and audit logging.
-4. **Developer SDK & CLI (`/sdk`, `/cli`)**:
-   - `tinyai_sdk`: Python programmatic client.
-   - `tinyai-cli`: Command-line tool for headless CI/CD optimization.
+### 1. Models Workspace
+- **Pre-flight Estimator Validation**: Upload serialized Python models (`.pkl`, `.joblib`) and verify estimator contracts (`predict`, `predict_proba`, input feature schema).
+- **Supported Operations Matrix**: Determines valid mathematical compression techniques for the active model family (Float16 Quantization, Structural Pruning, Soft-Target Knowledge Distillation, Compact Model Selection).
+- **Canonical Sample Catalog**: Pre-configured benchmark models (LightGBM Fraud Classifier, Scikit-Learn Random Forest Anomaly Detector, PyTorch Tabular MLP).
+- **Format Limitations**: Clearly states supported tabular formats and deliberate boundaries (excludes computer vision CNNs and generative LLMs).
+
+### 2. Runs Workspace
+- **Conversational Prompt-First Objective**: Describe target hardware, latency SLAs, size budgets, and quality thresholds in plain English (e.g. *"Optimize this model for CPU inference. Keep macro F1 above 0.90, keep the model under 250 KB, and minimize median inference latency."*).
+- **Transparent Deterministic NLP Parser**: Rule-based regex and entity extraction without external black-box LLM dependencies.
+- **Contradiction & Bound Validation**: Flags impossible or conflicting operational constraints before starting. Hard constraints are never silently relaxed.
+- **Real-Time Execution & Progress**: Live progress indicator and candidate generation stream logging measurements on host hardware.
+
+### 3. Results Workspace (The Hero)
+- **Hero Candidate Comparison Matrix**: Clean side-by-side comparison of baseline vs. compressed candidates with predictive quality, p50 latency (ms), artifact size (KB), compression ratio, feasibility status, and recommendation rank.
+- **Recommendation Rationale Banner**: Explains why a candidate was selected under user priority, strictly distinguishing hard constraints from multi-objective preferences.
+- **Honest Infeasibility Reporting**: If no candidate meets all constraints, clearly states failure reasons and highlights the violated bounds.
+- **Interactive Pareto Frontier Scatter Visualizer**: Non-dominated trade-off scatter plot (Quality vs. Latency vs. Size) with interactive candidate inspection.
+- **Explainability & Feature Fidelity**: Cosine similarity and Spearman rank correlation of feature attributions between baseline and compressed models.
+
+### 4. Releases Workspace
+- **Standalone Deployment Bundles**: Complete, self-contained packages containing `model.pkl`, `preprocessor.pkl`, `app.py` (FastAPI microservice), `Dockerfile`, `requirements.txt`, `load_test.py`, and `model_card.json`.
+- **Cryptographic Provenance**: SHA-256 hashes generated for every bundle artifact for auditable integrity.
+- **Independent Reproduction Guide**: Verifiable CLI steps to unpack, serve, and load-test the bundle locally or in Docker.
+- **1-Click Bundle Download**: Generates and downloads a `.zip` bundle archive.
+- **Live Edge Inference Sandbox**: Live interactive prediction testbed calculating real-time inference latency with microsecond accuracy.
 
 ---
 
-## 3. Real Measured Benchmark Results
+## 2. Real Measured Benchmark Results
 
-The following table reflects actual measurements captured on a Windows 11 AMD64 host (Intel Core processor) evaluating the canonical Point-of-Sale Financial Fraud benchmark dataset (5,000 samples, 3.5% minority fraud rate):
+Actual measurements captured on Windows 11 AMD64 host (Intel Core CPU) on the Financial Fraud benchmark (5,000 samples, 3.5% minority fraud rate):
 
 | Model Candidate | Optimization Strategy | Predictive Quality (PR-AUC / ROC-AUC) | p50 Latency (ms) | Artifact Size (KB) | Compression Ratio | Constraint Feasible |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -67,92 +62,80 @@ The following table reflects actual measurements captured on a Windows 11 AMD64 
 | **Distilled Student** | Soft-Target Teacher-Student MLP | 0.9250 (-1.72%) | **0.215 ms** | **18.6 KB** | **9.97x** | Feasible |
 | **L1 Sparse Linear** | L1 Regularized Sparse Logistic | 0.8840 (-6.07%) | **0.180 ms** | **6.4 KB** | **28.9x** | Feasible |
 
-> **Selection Rationale**: Under the `balanced` priority profile with a maximum latency budget of `1.0 ms` and disk budget of `250 KB`, the **Pruned (40% Sparsity)** model is recommended because it retains 99.7% of baseline predictive quality while delivering a **2.5x storage reduction** and **sub-0.30 ms edge inference**.
-
 ---
 
-## 4. Verification & Testing Evidence
+## 3. Test & Verification Evidence
 
-All quality gates have been executed and verified in the local workspace:
+All 32 tests in the Python test suite pass:
 
-### 1. Python ML Engine Test Suite (`pytest`)
 ```bash
-$env:PYTHONPATH="ml-engine;sdk"
 python -m pytest ml-engine/tests -v
 ```
-**Actual Result**:
+
 ```text
-======================= 17 passed, 4 warnings in 11.37s =======================
-ml-engine/tests/test_adapters.py::test_quantization_adapter PASSED       [  5%]
-ml-engine/tests/test_adapters.py::test_pruning_adapter PASSED            [ 11%]
-ml-engine/tests/test_adapters.py::test_distillation_adapter PASSED       [ 17%]
-ml-engine/tests/test_adapters.py::test_model_selection_adapter PASSED    [ 23%]
-ml-engine/tests/test_api.py::test_api_health PASSED                      [ 29%]
-ml-engine/tests/test_api.py::test_api_overview PASSED                    [ 35%]
-ml-engine/tests/test_api.py::test_api_datasets_samples PASSED            [ 41%]
-ml-engine/tests/test_api.py::test_api_load_sample PASSED                 [ 47%]
-ml-engine/tests/test_api.py::test_api_hardware_presets PASSED            [ 52%]
-ml-engine/tests/test_data.py::test_sample_datasets PASSED                [ 58%]
-ml-engine/tests/test_data.py::test_dataset_ingestion_and_fingerprinting PASSED [ 64%]
-ml-engine/tests/test_data.py::test_dataset_validation PASSED             [ 70%]
-ml-engine/tests/test_data.py::test_leakage_free_splitter PASSED          [ 76%]
-ml-engine/tests/test_export.py::test_bundle_packager PASSED              [ 82%]
-ml-engine/tests/test_pareto.py::test_pareto_analysis_dominance PASSED    [ 88%]
-ml-engine/tests/test_pareto.py::test_feasibility_filtering PASSED        [ 94%]
-ml-engine/tests/test_pareto.py::test_recommendation_ranking PASSED       [100%]
+============================== 32 passed in 10.73s ==============================
+ml-engine/tests/test_adapters.py::test_quantization_adapter PASSED           [  3%]
+ml-engine/tests/test_adapters.py::test_pruning_adapter PASSED                [  6%]
+ml-engine/tests/test_adapters.py::test_distillation_adapter PASSED           [  9%]
+ml-engine/tests/test_adapters.py::test_model_selection_adapter PASSED        [ 12%]
+ml-engine/tests/test_api.py::test_api_health PASSED                          [ 15%]
+ml-engine/tests/test_api.py::test_api_overview PASSED                        [ 18%]
+ml-engine/tests/test_api.py::test_api_datasets_samples PASSED                [ 21%]
+ml-engine/tests/test_api.py::test_api_load_sample PASSED                     [ 25%]
+ml-engine/tests/test_api.py::test_api_hardware_presets PASSED                [ 28%]
+ml-engine/tests/test_data.py::test_sample_datasets PASSED                    [ 31%]
+ml-engine/tests/test_data.py::test_dataset_ingestion_and_fingerprinting PASSED [ 34%]
+ml-engine/tests/test_data.py::test_dataset_validation PASSED                 [ 37%]
+ml-engine/tests/test_data.py::test_leakage_free_splitter PASSED              [ 40%]
+ml-engine/tests/test_end_to_end_journey.py::test_complete_replit_inspired_journey PASSED [ 43%]
+ml-engine/tests/test_end_to_end_workflow.py::test_end_to_end_ml_pipeline PASSED [ 46%]
+ml-engine/tests/test_end_to_end_workflow.py::test_api_live_prediction_and_dynamic_telemetry PASSED [ 50%]
+ml-engine/tests/test_end_to_end_workflow.py::test_api_explainability_and_drift_real_eval PASSED [ 53%]
+ml-engine/tests/test_export.py::test_bundle_packager PASSED                  [ 56%]
+ml-engine/tests/test_model_endpoints.py::test_parse_objective_api PASSED     [ 59%]
+ml-engine/tests/test_model_endpoints.py::test_sample_catalog_and_load_api PASSED [ 62%]
+ml-engine/tests/test_model_endpoints.py::test_upload_valid_model_api PASSED [ 65%]
+ml-engine/tests/test_model_endpoints.py::test_upload_invalid_format_and_unfitted_model PASSED [ 68%]
+ml-engine/tests/test_model_endpoints.py::test_export_bundle_with_checksums PASSED [ 71%]
+ml-engine/tests/test_objective_parser.py::test_parse_user_objective_specification PASSED [ 75%]
+ml-engine/tests/test_objective_parser.py::test_parse_rpi_and_microseconds PASSED [ 78%]
+ml-engine/tests/test_objective_parser.py::test_parse_cortex_m_smallest_size PASSED [ 81%]
+ml-engine/tests/test_objective_parser.py::test_detect_contradictory_constraints PASSED [ 84%]
+ml-engine/tests/test_objective_parser.py::test_explicit_strategy_filtering PASSED [ 87%]
+ml-engine/tests/test_pareto.py::test_pareto_analysis_dominance PASSED        [ 90%]
+ml-engine/tests/test_pareto.py::test_feasibility_filtering PASSED            [ 93%]
+ml-engine/tests/test_pareto.py::test_recommendation_ranking PASSED           [ 96%]
+ml-engine/tests/test_pareto.py::test_infeasible_candidate_ranking_honest_rationale PASSED [100%]
 ```
 
-### 2. Frontend Production Build (`npm run build`)
+### Frontend Build
 ```bash
 cd frontend
 npm run build
 ```
-**Actual Result**:
 ```text
-vite v8.3.4 building client environment for production...
-✓ 1934 modules transformed.
+✓ built in 1.53s
 dist/index.html                   1.07 kB │ gzip:  0.60 kB
-dist/assets/index-BaT8MiFq.css    3.16 kB │ gzip:  1.28 kB
-dist/assets/index-BJPQ07kF.js   312.37 kB │ gzip: 88.97 kB
-✓ built in 627ms
-```
-
-### 3. Java Spring Boot Control Plane Test Suite (`mvn test`)
-```bash
-cd services/control-plane
-mvn test
-```
-**Actual Result**:
-```text
-[INFO] Running ai.tinyai.controlplane.ControlPlaneApplicationTests
-2026-10-19T00:46:25.319+05:30  INFO : Started ControlPlaneApplicationTests in 7.26 seconds
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-[INFO] Running ai.tinyai.controlplane.ProjectServiceTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  01:22 min
+dist/assets/index-Br0khzBW.css    7.45 kB │ gzip:  2.13 kB
+dist/assets/index-BLKn0OIz.js   305.49 kB │ gzip: 87.46 kB
 ```
 
 ---
 
-## 5. Local Quickstart Guide
+## 4. Local Quickstart Guide
 
 ### Prerequisites
 - Python 3.12+
 - Node.js 20+
-- Java 17+ & Apache Maven 3.9+
 
-### 1. Launch Python ML Engine (Port 8000)
+### 1. Launch ML Optimization Engine (Port 8005)
 ```powershell
-$env:PYTHONPATH="ml-engine;sdk"
-python -m uvicorn tinyai.server:app --host 127.0.0.1 --port 8000
+python -c "import sys; sys.path.insert(0, 'ml-engine'); sys.path.insert(0, 'sdk'); import uvicorn; uvicorn.run('tinyai.server:app', host='127.0.0.1', port=8005)"
 ```
-- API Docs: `http://127.0.0.1:8000/docs`
-- Health: `http://127.0.0.1:8000/api/health`
+- Health Check: `http://127.0.0.1:8005/api/health`
+- Swagger OpenAPI Docs: `http://127.0.0.1:8005/docs`
 
-### 2. Launch Frontend UI (Port 5173)
+### 2. Launch Vite Frontend UI (Port 5173)
 ```powershell
 cd frontend
 npm install
@@ -160,37 +143,22 @@ npm run dev
 ```
 Open `http://localhost:5173/` in your browser.
 
-### 3. Launch Java Enterprise Control Plane (Port 8081)
-```powershell
-cd services/control-plane
-mvn spring-boot:run
-```
+---
+
+## 5. First-Time User Walkthrough
+
+1. **Launch**: Open `http://localhost:5173/`. You land directly on the **Runs Workspace** with the headline: *"Make your model deployment-ready."*
+2. **Describe Objective**: Click any prompt pill (e.g. *Raspberry Pi 4 (<1.5ms, <250KB)*) or write your custom requirements.
+3. **Inspect Extraction**: Click **Interpret Objective**. Review the interpreted deployment bounds and validation warnings.
+4. **Run Optimization**: Click **Run Optimization**. Watch the real-time execution progress across quantization, pruning, distillation, and compact model selection.
+5. **Analyze Results**: Review the **Hero Candidate Comparison Matrix** and the non-dominated **Pareto Frontier**. Inspect latency, size, and explainability fidelity.
+6. **Download & Test Release**: Click **Export Release**. Review file SHA-256 checksums, download the `.zip` archive, and execute real-time predictions in the **Live Edge Inference Sandbox**.
 
 ---
 
-## 6. End-to-End Vertical Demonstration Workflow
+## 6. Declarations & System Limitations
 
-1. **Ingest & Validate**:
-   - Open **Datasets** tab → Click **Load Fraud Benchmark (Imbalanced)**.
-   - Inspect dataset preview, class imbalance ratio (`27.5:1`), and schema audit.
-2. **Train Baseline**:
-   - Open **Baseline Models** tab → Click **Train Model** on LightGBM.
-   - View test metrics (ROC-AUC `0.9412`, PR-AUC `0.8650`, Latency `0.45ms`).
-3. **Run Adaptive Compression**:
-   - Open **Optimization Lab** tab → Set latency budget `1.0ms`, size budget `250KB`.
-   - Click **Launch Optimization**.
-   - Inspect the interactive Pareto Frontier chart and review the non-dominated candidates.
-4. **Export & Serve**:
-   - Open **Model Registry** tab → Click **1-Click Export Bundle** on the recommended candidate.
-   - TinyAI generates `model.pkl`, `preprocessor.pkl`, `app.py`, `Dockerfile`, `requirements.txt`, and `load_test.py`.
-5. **Live Inference Sandbox**:
-   - Open **Deployments & Sandbox** tab → Click **Execute Edge Prediction**.
-   - See sub-millisecond execution (`~0.25 ms`) and confidence probabilities.
-
----
-
-## 7. Declarations & System Limitations
-
-- **Tree Quantization**: For tree-based models (LightGBM, XGBoost, Random Forest), quantization represents precision reduction of split thresholds and leaves to float16 rather than tensor matrix integer arithmetic.
-- **Hardware Benchmarks**: Hardware measurements reflect the current host operating environment. Microsecond timings are measured via warm-up iterations and Python `time.perf_counter()`.
-- **Licensing**: Licensed under the Apache-2.0 License.
+- **Model Scope**: TinyAI is engineered specifically for tabular and structured machine learning workflows (Scikit-Learn, LightGBM, XGBoost, PyTorch Tabular). It intentionally excludes computer vision CNNs, speech audio networks, and generative LLMs.
+- **Tree Quantization**: For tree ensembles, quantization operates on leaf values and split threshold binning to float16 precision.
+- **Measurement Environment**: Benchmark latencies are measured on the local host CPU using single-sample warm-up runs and Python `time.perf_counter()`.
+- **License**: Apache-2.0.

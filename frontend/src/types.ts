@@ -84,6 +84,7 @@ export interface ExperimentManifest {
   recommended_candidate?: CandidateEvaluation;
   priority: string;
   hardware_environment: Record<string, any>;
+  objective_prompt?: string;
 }
 
 export interface ModelEntry {
@@ -95,15 +96,78 @@ export interface ModelEntry {
   dataset_id: string;
   strategy: string;
   model_family: string;
+  framework?: string;
   quality_metric: string;
   quality_score: number;
   latency_p50_ms: number;
   disk_size_kb: number;
   compression_ratio: number;
   artifact_path: string;
+  checksum_sha256?: string;
+  feature_count?: number;
+  is_valid?: boolean;
+  validation_status?: string;
+  supported_operations?: Array<{
+    name: string;
+    supported: boolean;
+    description: string;
+  }>;
   created_at: string;
   status: string;
   bundle_dir?: string;
+}
+
+export interface ParsedObjective {
+  raw_prompt: string;
+  target_hardware: string;
+  target_hardware_name: string;
+  max_disk_size_kb?: number;
+  max_latency_ms?: number;
+  min_quality_score?: number;
+  quality_metric_name: string;
+  max_memory_mb?: number;
+  priority: string;
+  enabled_strategies: string[];
+  detected_entities: Array<{
+    entity: string;
+    value: string;
+    extracted_raw?: string;
+  }>;
+  interpretation_summary: string;
+  validation_warnings: string[];
+  is_contradictory: boolean;
+  parser_type: string;
+  confidence_score: number;
+}
+
+export interface SampleModelCatalogItem {
+  sample_id: string;
+  name: string;
+  model_family: string;
+  framework: string;
+  dataset_name: string;
+  baseline_quality: number;
+  quality_metric: string;
+  baseline_latency_ms: number;
+  baseline_size_kb: number;
+  feature_count: number;
+  target_runtime: string;
+  description: string;
+  recommended_budget: {
+    max_disk_size_kb?: number;
+    max_latency_ms?: number;
+    min_quality_score?: number;
+    priority?: string;
+  };
+}
+
+export interface ExportBundleResponse {
+  model_id: string;
+  bundle_directory: string;
+  generated_files: Record<string, string>;
+  file_checksums?: Record<string, string>;
+  reproduction_instructions?: string[];
+  message: string;
 }
 
 export interface FeatureDriftReport {
