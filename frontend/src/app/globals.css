@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+
+  /* Voltage Punk Palette (Dark Default) */
+  --bg: #0B0A10;
+  --surface: #15131D;
+  --surface-2: #1D1A29;
+  --border: #2A2638;
+  --lime: #C6FF3D;
+  --magenta: #FF2E93;
+  --violet: #7B5CFF;
+  --amber: #FFB020;
+  --text: #F4F1EA;
+  --muted: #8F8AA8;
+
+  --sig-gradient: linear-gradient(120deg, #7B5CFF, #FF2E93 50%, #C6FF3D);
+}
+
+.light-theme {
+  /* Paper Punk (Light Mode) */
+  --bg: #FAF7F2;
+  --surface: #FFFFFF;
+  --surface-2: #F0EDE6;
+  --border: #E2DDD5;
+  --lime: #7AC70C;
+  --magenta: #E0157A;
+  --violet: #5B3FE0;
+  --amber: #E68A00;
+  --text: #14111C;
+  --muted: #6B657D;
+}
+
+.terminal-mode {
+  /* Konami Code CRT Mode */
+  --bg: #050801;
+  --surface: #0A1202;
+  --surface-2: #0F1C03;
+  --border: #1E3A06;
+  --lime: #39FF14;
+  --magenta: #39FF14;
+  --violet: #22CC00;
+  --amber: #39FF14;
+  --text: #39FF14;
+  --muted: #1F7A0A;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+  selection-background-color: var(--magenta);
+  selection-color: #FFFFFF;
+}
+
+::selection {
+  background: var(--magenta);
+  color: #FFFFFF;
+}
+
+/* Dot Grid Background Overlay */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(123, 92, 255, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glass Card */
+.glass-card {
+  background: rgba(21, 19, 29, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(198, 255, 61, 0.45);
+  box-shadow: 0 0 24px -4px rgba(198, 255, 61, 0.15);
+}
+
+/* Neo-brutalist button styling */
+.btn-primary {
+  background-color: var(--lime);
+  color: #0B0A10;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0px 0px var(--magenta);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-primary:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--magenta);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--violet);
+  box-shadow: 0 0 16px -2px rgba(123, 92, 255, 0.3);
+}
+
+/* Badge glow rules */
+.badge-pass {
+  background: rgba(198, 255, 61, 0.15);
+  color: var(--lime);
+  border: 1px solid var(--lime);
+  box-shadow: 0 0 12px rgba(198, 255, 61, 0.3);
+}
+
+.badge-fail {
+  background: rgba(255, 46, 147, 0.15);
+  color: var(--magenta);
+  border: 1px solid var(--magenta);
+  box-shadow: 0 0 12px rgba(255, 46, 147, 0.3);
+}
+
+/* Scanline effect */
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 20;
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  opacity: 0.6;
+}

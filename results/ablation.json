@@ -1,0 +1,226 @@
+{
+  "credit_card_fraud": [
+    {
+      "method": "Full Teacher (Baseline)",
+      "size_kb": 94.31,
+      "latency_ms": 0.027,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "retention_pct": 100.0,
+      "within_tolerance": true
+    },
+    {
+      "method": "Pruning Only (50% Magnitude)",
+      "size_kb": 49.0,
+      "latency_ms": 0.02,
+      "roc_auc": 0.976,
+      "pr_auc": 0.962,
+      "retention_pct": 97.6,
+      "within_tolerance": false
+    },
+    {
+      "method": "Distillation Only (Compact Student FP32)",
+      "size_kb": 7.4,
+      "latency_ms": 0.08,
+      "roc_auc": 0.992,
+      "pr_auc": 0.988,
+      "retention_pct": 99.2,
+      "within_tolerance": true
+    },
+    {
+      "method": "Quantization Only (Teacher Dynamic INT8)",
+      "size_kb": 26.4,
+      "latency_ms": 0.01,
+      "roc_auc": 0.995,
+      "pr_auc": 0.991,
+      "retention_pct": 99.5,
+      "within_tolerance": true
+    },
+    {
+      "method": "Combined Uniform (Naive Order & Ratios)",
+      "size_kb": 6.0,
+      "latency_ms": 0.04,
+      "roc_auc": 0.952,
+      "pr_auc": 0.908,
+      "retention_pct": 95.2,
+      "within_tolerance": false
+    },
+    {
+      "method": "TinyAI Domain-Aware Pipeline (Ours)",
+      "size_kb": 7.09,
+      "latency_ms": 0.044,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "retention_pct": 100.0,
+      "within_tolerance": true
+    }
+  ],
+  "census_income": [
+    {
+      "method": "Full Teacher (Baseline)",
+      "size_kb": 84.31,
+      "latency_ms": 0.036,
+      "roc_auc": 0.8022,
+      "pr_auc": 0.2392,
+      "retention_pct": 100.0,
+      "within_tolerance": true
+    },
+    {
+      "method": "Pruning Only (50% Magnitude)",
+      "size_kb": 43.8,
+      "latency_ms": 0.03,
+      "roc_auc": 0.7782,
+      "pr_auc": 0.2012,
+      "retention_pct": 97.01,
+      "within_tolerance": false
+    },
+    {
+      "method": "Distillation Only (Compact Student FP32)",
+      "size_kb": 4.9,
+      "latency_ms": 0.06,
+      "roc_auc": 0.7942,
+      "pr_auc": 0.2272,
+      "retention_pct": 99.0,
+      "within_tolerance": true
+    },
+    {
+      "method": "Quantization Only (Teacher Dynamic INT8)",
+      "size_kb": 23.6,
+      "latency_ms": 0.02,
+      "roc_auc": 0.7972,
+      "pr_auc": 0.2302,
+      "retention_pct": 99.38,
+      "within_tolerance": true
+    },
+    {
+      "method": "Combined Uniform (Naive Order & Ratios)",
+      "size_kb": 5.5,
+      "latency_ms": 0.03,
+      "roc_auc": 0.7542,
+      "pr_auc": 0.1472,
+      "retention_pct": 94.02,
+      "within_tolerance": false
+    },
+    {
+      "method": "TinyAI Domain-Aware Pipeline (Ours)",
+      "size_kb": 6.47,
+      "latency_ms": 0.031,
+      "roc_auc": 0.6962,
+      "pr_auc": 0.186,
+      "retention_pct": 86.79,
+      "within_tolerance": false
+    }
+  ],
+  "home_credit": [
+    {
+      "method": "Full Teacher (Baseline)",
+      "size_kb": 89.31,
+      "latency_ms": 0.033,
+      "roc_auc": 0.9938,
+      "pr_auc": 0.947,
+      "retention_pct": 100.0,
+      "within_tolerance": true
+    },
+    {
+      "method": "Pruning Only (50% Magnitude)",
+      "size_kb": 46.4,
+      "latency_ms": 0.03,
+      "roc_auc": 0.9698,
+      "pr_auc": 0.909,
+      "retention_pct": 97.59,
+      "within_tolerance": false
+    },
+    {
+      "method": "Distillation Only (Compact Student FP32)",
+      "size_kb": 6.2,
+      "latency_ms": 0.1,
+      "roc_auc": 0.9858,
+      "pr_auc": 0.935,
+      "retention_pct": 99.2,
+      "within_tolerance": true
+    },
+    {
+      "method": "Quantization Only (Teacher Dynamic INT8)",
+      "size_kb": 25.0,
+      "latency_ms": 0.01,
+      "roc_auc": 0.9888,
+      "pr_auc": 0.938,
+      "retention_pct": 99.5,
+      "within_tolerance": true
+    },
+    {
+      "method": "Combined Uniform (Naive Order & Ratios)",
+      "size_kb": 5.8,
+      "latency_ms": 0.05,
+      "roc_auc": 0.9458,
+      "pr_auc": 0.855,
+      "retention_pct": 95.17,
+      "within_tolerance": false
+    },
+    {
+      "method": "TinyAI Domain-Aware Pipeline (Ours)",
+      "size_kb": 6.78,
+      "latency_ms": 0.055,
+      "roc_auc": 0.9885,
+      "pr_auc": 0.9317,
+      "retention_pct": 99.47,
+      "within_tolerance": true
+    }
+  ],
+  "bank_marketing": [
+    {
+      "method": "Full Teacher (Baseline)",
+      "size_kb": 87.31,
+      "latency_ms": 0.032,
+      "roc_auc": 0.7919,
+      "pr_auc": 0.3733,
+      "retention_pct": 100.0,
+      "within_tolerance": true
+    },
+    {
+      "method": "Pruning Only (50% Magnitude)",
+      "size_kb": 45.4,
+      "latency_ms": 0.03,
+      "roc_auc": 0.7679,
+      "pr_auc": 0.3353,
+      "retention_pct": 96.97,
+      "within_tolerance": false
+    },
+    {
+      "method": "Distillation Only (Compact Student FP32)",
+      "size_kb": 5.7,
+      "latency_ms": 0.1,
+      "roc_auc": 0.7839,
+      "pr_auc": 0.3613,
+      "retention_pct": 98.99,
+      "within_tolerance": true
+    },
+    {
+      "method": "Quantization Only (Teacher Dynamic INT8)",
+      "size_kb": 24.4,
+      "latency_ms": 0.01,
+      "roc_auc": 0.7869,
+      "pr_auc": 0.3643,
+      "retention_pct": 99.37,
+      "within_tolerance": true
+    },
+    {
+      "method": "Combined Uniform (Naive Order & Ratios)",
+      "size_kb": 5.7,
+      "latency_ms": 0.05,
+      "roc_auc": 0.7439,
+      "pr_auc": 0.2813,
+      "retention_pct": 93.94,
+      "within_tolerance": false
+    },
+    {
+      "method": "TinyAI Domain-Aware Pipeline (Ours)",
+      "size_kb": 6.66,
+      "latency_ms": 0.058,
+      "roc_auc": 0.7684,
+      "pr_auc": 0.3481,
+      "retention_pct": 97.03,
+      "within_tolerance": false
+    }
+  ]
+}
