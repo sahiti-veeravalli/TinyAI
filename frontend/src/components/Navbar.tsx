@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Cpu, Terminal, Github, Sparkles, BookOpen, ShieldCheck, Zap } from "lucide-react";
+import Link from "next/link";
+import { Cpu, Terminal, Github, Sparkles, BookOpen, ShieldCheck, Zap, Radio } from "lucide-react";
 
 interface NavbarProps {
   onOpenCommand?: () => void;
@@ -67,12 +68,13 @@ export default function Navbar({ onOpenCommand, onOpenAssistant }: NavbarProps) 
           <a href="#edge-sim" className="text-muted hover:text-text transition-colors">
             Edge Simulator
           </a>
-          <a href="#trust" className="text-muted hover:text-text transition-colors">
-            Explainability
-          </a>
-          <a href="#drift" className="text-muted hover:text-text transition-colors">
-            Drift
-          </a>
+          <Link
+            href="/console"
+            className="text-lime hover:text-lime/90 font-bold transition-colors flex items-center space-x-1 border border-lime/30 px-2 py-0.5 rounded bg-lime/10"
+          >
+            <Radio className="w-3 h-3 text-lime animate-pulse" />
+            <span>Studio Console</span>
+          </Link>
         </nav>
 
         {/* Right Actions */}
@@ -107,23 +109,14 @@ export default function Navbar({ onOpenCommand, onOpenAssistant }: NavbarProps) 
             <kbd className="text-[10px] bg-surface-2 px-1 rounded border border-border">⌘K</kbd>
           </button>
 
-          {/* GitHub CTA */}
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-lg bg-surface border border-border hover:border-text transition-colors text-muted hover:text-text"
-          >
-            <Github className="w-4 h-4" />
-          </a>
-
           {/* Primary CTA */}
-          <a
-            href="#playground"
-            className="btn-primary text-xs px-4 py-2 flex items-center space-x-1"
+          <Link
+            href="/console"
+            className="btn-primary text-xs px-4 py-2 flex items-center space-x-1.5 shadow-lime-glow"
           >
-            <span>Compress Now</span>
-          </a>
+            <Zap className="w-3.5 h-3.5 text-black" />
+            <span>Launch Studio Console</span>
+          </Link>
         </div>
       </div>
     </header>

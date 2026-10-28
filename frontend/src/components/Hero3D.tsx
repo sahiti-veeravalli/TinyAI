@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import Link from "next/link";
 import { ArrowRight, FileText, Zap, ShieldCheck, Flame, CheckCircle2 } from "lucide-react";
 
 export default function Hero3D() {
@@ -255,13 +256,13 @@ export default function Hero3D() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <a
-                href="#playground"
+              <Link
+                href="/console"
                 className="btn-primary px-6 py-3.5 text-sm sm:text-base flex items-center space-x-2"
               >
-                <span>Try the Playground</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
+                <span>Launch Studio Console</span>
+                <ArrowRight className="w-4 h-4 text-black" />
+              </Link>
               <a
                 href="#pipeline"
                 className="btn-secondary px-6 py-3.5 text-sm sm:text-base flex items-center space-x-2"
