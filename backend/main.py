@@ -390,15 +390,23 @@ async def upload_and_profile_dataset(file: UploadFile = File(...)):
             cost_asymmetry = 1.0
             dominant_metric = "Balanced Distribution (1x Error Cost Asymmetry)"
             
-        profile = DatasetProfile(
-            name=filename,
-            n_samples=rows,
-            n_features=cols - 1,
-            imbalance_ratio=imbalance_ratio,
-            sparsity=sparsity_pct / 100.0,
-            missing_rate=missing_pct / 100.0,
+        # Build numerical feature array for profiler
+        feat_cols = [c for c in df.columns if c != target_col]
+        X_df = df[feat_cols].copy()
+        for c in X_df.select_dtypes(include=[np.number]).columns:
+            X_df[c] = X_df[c].fillna(0.0)
+        for c in X_df.select_dtypes(exclude=[np.number]).columns:
+            X_df[c] = X_df[c].astype("category").cat.codes
+            
+        X_arr = X_df.to_numpy(dtype=np.float32)
+        y_arr = df[target_col].astype("category").cat.codes.to_numpy(dtype=np.int64)
+
+        profile = DatasetProfiler.profile(
+            X=X_arr,
+            y=y_arr,
+            feature_names=[str(c) for c in feat_cols],
             cost_asymmetry=cost_asymmetry,
-            categorical_ratio=len(cat_cols) / max(cols, 1)
+            dataset_name=filename
         )
         
         plan = DomainAwareScheduler.recommend_plan(profile)
