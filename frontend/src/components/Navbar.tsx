@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Cpu, Terminal, Github, Sparkles, BookOpen, ShieldCheck, Zap, Radio } from "lucide-react";
+import { Sparkles, Zap } from "lucide-react";
 
 interface NavbarProps {
   onOpenCommand?: () => void;
@@ -11,19 +11,12 @@ interface NavbarProps {
 
 export default function Navbar({ onOpenCommand, onOpenAssistant }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
-  const [backendOnline, setBackendOnline] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
-
-    // Check backend health
-    fetch("http://localhost:8000/health")
-      .then((res) => setBackendOnline(res.ok))
-      .catch(() => setBackendOnline(false));
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -68,29 +61,10 @@ export default function Navbar({ onOpenCommand, onOpenAssistant }: NavbarProps) 
           <a href="#edge-sim" className="text-muted hover:text-text transition-colors">
             Edge Simulator
           </a>
-          <Link
-            href="/console"
-            className="text-lime hover:text-lime/90 font-bold transition-colors flex items-center space-x-1 border border-lime/30 px-2 py-0.5 rounded bg-lime/10"
-          >
-            <Radio className="w-3 h-3 text-lime animate-pulse" />
-            <span>Studio Console</span>
-          </Link>
         </nav>
 
         {/* Right Actions */}
         <div className="flex items-center space-x-3">
-          {/* Backend Status indicator */}
-          <div className="hidden sm:flex items-center space-x-2 px-2.5 py-1 rounded-full bg-surface border border-border text-xs font-mono">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                backendOnline ? "bg-lime animate-pulse" : "bg-amber"
-              }`}
-            />
-            <span className="text-muted text-[11px]">
-              {backendOnline ? "API Online" : "Local Demo"}
-            </span>
-          </div>
-
           {/* AI Assistant button */}
           <button
             onClick={onOpenAssistant}
