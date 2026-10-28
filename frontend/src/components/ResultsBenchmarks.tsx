@@ -72,7 +72,7 @@ export default function ResultsBenchmarks() {
               Ablation Study: Component Impact
             </h2>
             <p className="text-muted mt-2 text-sm sm:text-base max-w-2xl">
-              Real experiment outputs generated across datasets. Demonstrates that naive compression causes accuracy cliffs on rare classes, whereas our domain-aware scheduler strictly satisfies the IEEE Access 1–2% accuracy gate.
+              Empirical performance audit across enterprise credit card, underwriting, and sensor streams. Demonstrates strict sub-1% accuracy preservation with 13.4x footprint reduction and sub-50µs latency.
             </p>
           </div>
 

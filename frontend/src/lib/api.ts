@@ -307,3 +307,41 @@ export async function generateApiKey() {
     status: "ACTIVE"
   };
 }
+
+export async function uploadDataset(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch(`${API_BASE}/api/v1/datasets/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Upload failed" }));
+    throw new Error(err.detail || "Failed to upload and profile dataset");
+  }
+  return await res.json();
+}
+
+export async function runCompressionJob(datasetName: string, costAsymmetry: number = 50.0) {
+  const res = await fetch(`${API_BASE}/api/v1/jobs/compress`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ dataset_name: datasetName, cost_asymmetry: costAsymmetry }),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to run compression job");
+  }
+  return await res.json();
+}
+
+export function getExportCppUrl(modelId: string) {
+  return `${API_BASE}/api/v1/models/${encodeURIComponent(modelId)}/export/cpp`;
+}
+
+export function getExportPythonUrl(modelId: string) {
+  return `${API_BASE}/api/v1/models/${encodeURIComponent(modelId)}/export/python`;
+}
+
+export function getModelDownloadUrl(modelId: string) {
+  return `${API_BASE}/api/v1/models/${encodeURIComponent(modelId)}/download`;
+}

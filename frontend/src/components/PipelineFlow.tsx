@@ -212,7 +212,7 @@ export default function PipelineFlow() {
               </div>
 
               <div>
-                <h4 className="text-xs font-mono uppercase text-muted mb-2">// PATENTABLE ROLE IN SCHEDULING_</h4>
+                <h4 className="text-xs font-mono uppercase text-muted mb-2">// PIPELINE ARCHITECTURAL ROLE_</h4>
                 <div className="p-4 rounded-lg bg-violet/10 border border-violet/30 font-sans text-sm text-text leading-relaxed">
                   {selectedStage.patentRole}
                 </div>
