@@ -345,3 +345,133 @@ export function getExportPythonUrl(modelId: string) {
 export function getModelDownloadUrl(modelId: string) {
   return `${API_BASE}/api/v1/models/${encodeURIComponent(modelId)}/download`;
 }
+
+
+export async function trainBaselineModel(payload: {
+  dataset_id: string;
+  model_type?: string;
+  hyperparameters?: Record<string, any>;
+  random_seed?: number;
+}) {
+  const res = await fetch(`${API_BASE}/api/v1/models/train-baseline`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      dataset_id: payload.dataset_id,
+      model_type: payload.model_type || "mlp_resnet",
+      hyperparameters: payload.hyperparameters || {},
+      random_seed: payload.random_seed || 42,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Baseline training failed" }));
+    throw new Error(err.detail || "Failed to train baseline model");
+  }
+  return await res.json();
+}
+
+export async function prepareDataset(payload: {
+  dataset_id: string;
+  target_column?: string;
+  task_type?: string;
+  test_size?: number;
+  val_size?: number;
+  random_seed?: number;
+  cost_asymmetry?: number;
+}) {
+  const res = await fetch(`${API_BASE}/api/v1/datasets/prepare`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Preparation failed" }));
+    throw new Error(err.detail || "Failed to prepare dataset splits");
+  }
+  return await res.json();
+}
+
+export async function runOptimization(payload: {
+  dataset_id: string;
+  baseline_model_id?: string;
+  model_type?: string;
+  pipeline_order?: string[];
+  pruning_ratio?: number;
+  pruning_type?: string;
+  distillation_temperature?: number;
+  distillation_alpha?: number;
+  quantization_bits?: number;
+  epochs?: number;
+  tolerance_pct?: number;
+}) {
+  const res = await fetch(`${API_BASE}/api/v1/optimize/run`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      dataset_id: payload.dataset_id,
+      baseline_model_id: payload.baseline_model_id,
+      model_type: payload.model_type || "mlp_resnet",
+      pipeline_order: payload.pipeline_order || ["distillation", "pruning", "quantization"],
+      pruning_ratio: payload.pruning_ratio !== undefined ? payload.pruning_ratio : 0.35,
+      pruning_type: payload.pruning_type || "unstructured_magnitude",
+      distillation_temperature: payload.distillation_temperature !== undefined ? payload.distillation_temperature : 3.5,
+      distillation_alpha: payload.distillation_alpha !== undefined ? payload.distillation_alpha : 0.75,
+      quantization_bits: payload.quantization_bits !== undefined ? payload.quantization_bits : 8,
+      epochs: payload.epochs !== undefined ? payload.epochs : 8,
+      tolerance_pct: payload.tolerance_pct !== undefined ? payload.tolerance_pct : 2.0,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Optimization job failed" }));
+    throw new Error(err.detail || "Failed to execute model optimization");
+  }
+  return await res.json();
+}
+
+export async function fetchExperiments() {
+  try {
+    const res = await fetch(`${API_BASE}/api/v1/experiments`, { cache: "no-store" });
+    if (res.ok) return await res.json();
+  } catch (e) {
+    console.warn("Experiments API fallback");
+  }
+  return [];
+}
+
+export async function fetchExperimentDetails(experimentId: string) {
+  const res = await fetch(`${API_BASE}/api/v1/experiments/${encodeURIComponent(experimentId)}`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Experiment not found");
+  return await res.json();
+}
+
+export async function executeInference(modelId: string, features: any, isClassification: boolean = true) {
+  const res = await fetch(`${API_BASE}/api/v1/inference/predict`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model_id: modelId,
+      features,
+      is_classification: isClassification,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Inference failed" }));
+    throw new Error(err.detail || "Failed to execute inference");
+  }
+  return await res.json();
+}
+
+export async function promoteModel(modelId: string, status: string = "PRODUCTION") {
+  const res = await fetch(`${API_BASE}/api/v1/models/${encodeURIComponent(modelId)}/promote`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model_id: modelId, status }),
+  });
+  if (!res.ok) throw new Error("Failed to promote model");
+  return await res.json();
+}
+
+export function getPackageDownloadUrl(packageName: string) {
+  const safeName = packageName.endsWith(".zip") ? packageName : `${packageName}.zip`;
+  return `${API_BASE}/api/v1/packages/${encodeURIComponent(safeName)}/download`;
+}

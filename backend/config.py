@@ -3,7 +3,7 @@ Configuration and settings for TinyAI backend API.
 """
 
 import os
-
+from typing import List
 
 
 class Settings:
@@ -15,7 +15,24 @@ class Settings:
     BASE_DIR: str = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     RESULTS_DIR: str = os.path.join(BASE_DIR, "results")
     MODELS_DIR: str = os.path.join(RESULTS_DIR, "models")
+    UPLOADS_DIR: str = os.path.join(RESULTS_DIR, "uploads")
+    EXPERIMENTS_DIR: str = os.path.join(RESULTS_DIR, "experiments")
+    PACKAGES_DIR: str = os.path.join(RESULTS_DIR, "packages")
+    REGISTRY_DIR: str = os.path.join(RESULTS_DIR, "registry")
     
+    # Security & Upload constraints
+    MAX_UPLOAD_SIZE_BYTES: int = int(os.getenv("MAX_UPLOAD_SIZE_BYTES", 50 * 1024 * 1024))  # 50 MB
+    ALLOWED_ORIGINS: List[str] = [
+        o.strip() for o in os.getenv(
+            "ALLOWED_ORIGINS",
+            "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000"
+        ).split(",") if o.strip()
+    ]
+    API_KEY_AUTH_ENABLED: bool = os.getenv("API_KEY_AUTH_ENABLED", "false").lower() in ("true", "1", "yes")
+    API_SECRET_KEY: str = os.getenv("API_SECRET_KEY", "ta_live_default_dev_key")
+    RATE_LIMIT_ENABLED: bool = os.getenv("RATE_LIMIT_ENABLED", "true").lower() in ("true", "1", "yes")
+    RATE_LIMIT_PER_MINUTE: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "120"))
+
     # LLM / AI Research Assistant settings
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
@@ -67,3 +84,14 @@ class Settings:
 
 
 settings = Settings()
+
+# Ensure directories exist
+for directory in [
+    settings.RESULTS_DIR,
+    settings.MODELS_DIR,
+    settings.UPLOADS_DIR,
+    settings.EXPERIMENTS_DIR,
+    settings.PACKAGES_DIR,
+    settings.REGISTRY_DIR
+]:
+    os.makedirs(directory, exist_ok=True)

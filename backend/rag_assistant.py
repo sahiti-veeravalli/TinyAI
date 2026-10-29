@@ -36,8 +36,8 @@ KNOWLEDGE_CORPUS = [
     },
     {
         "id": "paper-method-pruning",
-        "title": "Paper Methodology: Unstructured vs Structured Pruning",
-        "citation": "IEEE Access Draft, Section III-B",
+        "title": "Methodology: Unstructured vs Structured Pruning",
+        "citation": "Architecture Specification, Section 3.2",
         "content": (
             "We employ L1-norm magnitude pruning consolidated into base weights to prevent runtime mask overhead. "
             "On datasets with feature dimensionality > 35, structured neuron pruning is prioritized to eliminate dead "
@@ -46,8 +46,8 @@ KNOWLEDGE_CORPUS = [
     },
     {
         "id": "paper-method-quantization",
-        "title": "Paper Methodology: Dynamic INT8 Quantization",
-        "citation": "IEEE Access Draft, Section III-D",
+        "title": "Methodology: Dynamic INT8 Quantization",
+        "citation": "Quantization Specification, Section 3.4",
         "content": (
             "Quantization applies dynamic INT8 (signed 8-bit integers) using ONNX Runtime. Activations are scaled per-tensor "
             "at runtime, while weights use per-channel symmetric quantization. This prevents dynamic range truncation "
@@ -68,7 +68,7 @@ KNOWLEDGE_CORPUS = [
     {
         "id": "fairness-adult",
         "title": "Algorithmic Fairness: Census Income Preservation",
-        "citation": "IEEE Access Draft, Section V: Ethical & Fairness Auditing",
+        "citation": "Fairness & Trust Specification, Section 5",
         "content": (
             "Auditing Demographic Parity Difference and Equal Opportunity across demographic groups (Sex and Race) "
             "on the Adult Census benchmark revealed that TinyAI compression did not widen disparity gaps: "
@@ -199,7 +199,7 @@ class RAGAssistant:
         else:
             context_snippet = "\n\n".join([f"**[{d['title']}]**: {d['content']}" for d in retrieved_docs])
             reply = (
-                f"Based on TinyAI's empirical research and IEEE Access paper documentation:\n\n"
+                f"Based on TinyAI's technical documentation and empirical benchmarks:\n\n"
                 f"{context_snippet}\n\n"
                 f"Feel free to ask about specific compression trade-offs, SHAP preservation scores, or run an edge simulation."
             )

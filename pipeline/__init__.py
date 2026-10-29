@@ -6,3 +6,4 @@ Patentable aspect: Domain-aware compression schedule for tabular edge AI.
 """
 
 __version__ = "1.0.0"
+

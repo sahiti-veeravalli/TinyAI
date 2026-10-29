@@ -9,8 +9,18 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
+      - ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+      - MAX_UPLOAD_SIZE_BYTES=52428800
+      - RATE_LIMIT_ENABLED=true
+      - RATE_LIMIT_PER_MINUTE=120
     volumes:
       - ./results:/app/results
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped
 
   frontend:
@@ -22,5 +32,6 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped

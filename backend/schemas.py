@@ -81,6 +81,7 @@ class CompressJobRequest(BaseModel):
     distillation_temperature: float = 3.5
     distillation_alpha: float = 0.75
     quantization_bits: int = 8
+    cost_asymmetry: Optional[float] = 50.0
 
 
 # Prediction & Inference
@@ -165,3 +166,136 @@ class ChatResponse(BaseModel):
     reply: str
     citations: List[Dict[str, str]]
     suggested_action: Optional[Dict[str, Any]] = None
+
+
+# --- Production Pipeline & Experiment Tracking Schemas ---
+
+class ColumnMeta(BaseModel):
+    name: str
+    type: str
+    null_count: int
+    null_pct: float
+    distinct_count: int
+    min: Optional[float] = None
+    mean: Optional[float] = None
+    std: Optional[float] = None
+    max: Optional[float] = None
+    median: Optional[float] = None
+    top_value: Optional[str] = None
+
+
+class DatasetInspectResponse(BaseModel):
+    dataset_name: str
+    rows_count: int
+    columns_count: int
+    features_count: int
+    duplicate_rows: int
+    missing_cells: int
+    missing_pct: float
+    inferred_target: str
+    inferred_task_type: str
+    imbalance_ratio: str
+    columns: List[ColumnMeta]
+    preview_rows: List[Dict[str, Any]]
+
+
+class PrepareDatasetRequest(BaseModel):
+    dataset_id: str
+    target_column: Optional[str] = None
+    task_type: Optional[str] = None
+    test_size: float = 0.15
+    val_size: float = 0.15
+    random_seed: int = 42
+    cost_asymmetry: float = 1.0
+
+
+class PrepareDatasetResponse(BaseModel):
+    dataset_id: str
+    dataset_name: str
+    fingerprint: str
+    task_type: str
+    target_column: str
+    n_samples: int
+    n_features: int
+    feature_names: List[str]
+    numerical_cols: List[str]
+    categorical_cols: List[str]
+    train_count: int
+    val_count: int
+    test_count: int
+    imbalance_ratio: str
+
+
+class TrainBaselineRequest(BaseModel):
+    dataset_id: str
+    model_type: str = "mlp_resnet"  # mlp_resnet, random_forest, gradient_boosting, linear
+    hyperparameters: Optional[Dict[str, Any]] = None
+    random_seed: int = 42
+
+
+class TrainBaselineResponse(BaseModel):
+    model_id: str
+    model_type: str
+    task_type: str
+    dataset_name: str
+    training_duration_sec: float
+    metrics: Dict[str, float]
+    latency_stats: Dict[str, float]
+    model_size_kb: float
+    checksum_sha256: str
+    onnx_available: bool
+
+
+class RunOptimizationRequest(BaseModel):
+    dataset_id: str
+    baseline_model_id: Optional[str] = None
+    model_type: Optional[str] = "mlp_resnet"
+    pipeline_order: Optional[List[str]] = Field(default=["distillation", "pruning", "quantization"])
+    pruning_ratio: float = 0.35
+    pruning_type: str = "unstructured_magnitude"
+    distillation_temperature: float = 3.5
+    distillation_alpha: float = 0.75
+    quantization_bits: int = 8
+    epochs: int = 8
+    tolerance_pct: float = 2.0
+
+
+class RunOptimizationResponse(BaseModel):
+    experiment_id: str
+    status: str
+    dataset_name: str
+    pipeline_order: List[str]
+    original_size_kb: float
+    optimized_size_kb: float
+    compression_ratio: float
+    size_reduction_pct: float
+    original_latency_ms: float
+    optimized_latency_ms: float
+    speedup_ratio: float
+    baseline_metrics: Dict[str, float]
+    optimized_metrics: Dict[str, float]
+    accuracy_gap_pct: float
+    performance_retention_pct: float
+    badge_status: str
+    peak_memory_mb: float
+    duration_sec: float
+    package_download_url: str
+
+
+class InferencePredictRequest(BaseModel):
+    model_id: str
+    features: Union[List[float], List[List[float]], Dict[str, Any], List[Dict[str, Any]]]
+    is_classification: bool = True
+
+
+class InferencePredictResponse(BaseModel):
+    model_path: str
+    sample_count: int
+    latency_ms: float
+    is_batch: bool
+    predictions: List[Dict[str, Any]]
+
+
+class PromoteModelRequest(BaseModel):
+    model_id: str
+    status: str = "PRODUCTION"

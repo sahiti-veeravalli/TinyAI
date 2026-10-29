@@ -37,3 +37,10 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# TinyAI runtime uploads, packages, and temp models
+results/uploads/
+results/packages/
+results/experiments.json
+results/models/baseline_*
+results/models/opt_*
