@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Play, Sparkles, Sliders, CheckCircle2, Download, RefreshCw, Cpu, Activity, ShieldCheck, ArrowRight, Zap, Code, FileCode } from "lucide-react";
+import { Play, Sparkles, Sliders, CheckCircle2, Download, RefreshCw, Cpu, Activity, ShieldCheck, ArrowRight, Zap, Code, FileCode, Package } from "lucide-react";
 import { dualPredict, runCompressionJob } from "@/lib/api";
 
 const DATASETS = [
@@ -188,7 +188,7 @@ export default function Playground() {
               <div className="space-y-4 pt-2 border-t border-border/60">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-mono uppercase text-muted">
-                    // STEP 2: TUNE COMPRESSION_
+                    // STEP 2: CHOOSE COMPRESSION PRESET_
                   </label>
                   <button
                     onClick={applyDomainAwareAuto}
@@ -196,6 +196,60 @@ export default function Playground() {
                   >
                     <Sparkles className="w-3 h-3 text-lime" />
                     <span>Auto (Domain-Aware)</span>
+                  </button>
+                </div>
+
+                {/* 3 Quick Presets */}
+                <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+                  <button
+                    onClick={() => {
+                      setPruningRatio(50);
+                      setTemperature(4.0);
+                      setAlpha(0.8);
+                      setQuantBits("INT8");
+                    }}
+                    className={`p-2 rounded-lg border transition-all ${
+                      pruningRatio >= 50
+                        ? "bg-surface-2 border-magenta text-magenta font-bold"
+                        : "bg-surface border-border text-muted hover:border-magenta"
+                    }`}
+                  >
+                    <span className="block text-[10px] text-muted">⚡ EXTREME</span>
+                    <span className="font-bold text-xs text-magenta">~92% Off</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setPruningRatio(30);
+                      setTemperature(3.5);
+                      setAlpha(0.75);
+                      setQuantBits("INT8");
+                    }}
+                    className={`p-2 rounded-lg border transition-all relative ${
+                      pruningRatio === 30
+                        ? "bg-surface-2 border-lime text-lime font-bold shadow-lime-glow"
+                        : "bg-surface border-border text-muted hover:border-lime"
+                    }`}
+                  >
+                    <span className="block text-[10px] text-lime">🎯 RECOMMENDED</span>
+                    <span className="font-bold text-xs text-lime">13.4x / 99%</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setPruningRatio(10);
+                      setTemperature(2.0);
+                      setAlpha(0.5);
+                      setQuantBits("INT8");
+                    }}
+                    className={`p-2 rounded-lg border transition-all ${
+                      pruningRatio <= 10
+                        ? "bg-surface-2 border-violet text-violet font-bold"
+                        : "bg-surface border-border text-muted hover:border-violet"
+                    }`}
+                  >
+                    <span className="block text-[10px] text-muted">🛡️ LIGHT</span>
+                    <span className="font-bold text-xs text-violet">100% Exact</span>
                   </button>
                 </div>
 
@@ -365,18 +419,27 @@ export default function Playground() {
               {/* Downloads Bar */}
               <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border/70 text-xs font-mono">
                 <a
+                  href={`http://localhost:8000/api/v1/packages/tinyai_package_${selectedDataset.id}_student_int8/download`}
+                  download
+                  className="px-4 py-2 rounded-lg bg-lime hover:bg-lime/90 text-black font-extrabold flex items-center space-x-2 transition-all shadow-lime-glow cursor-pointer"
+                >
+                  <Package className="w-4 h-4 text-black" />
+                  <span>Download Complete Package (.ZIP)</span>
+                </a>
+
+                <a
                   href={`http://localhost:8000/api/v1/models/${selectedDataset.id}_student_int8/download`}
                   download="model_int8.onnx"
-                  className="px-3 py-1.5 rounded bg-surface-2 border border-border hover:border-lime text-text flex items-center space-x-1.5 transition-colors"
+                  className="px-3 py-1.5 rounded bg-surface-2 border border-border hover:border-lime text-text flex items-center space-x-1.5 transition-colors cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5 text-lime" />
-                  <span>Download .ONNX (7.2 KB)</span>
+                  <span>.ONNX Weights</span>
                 </a>
 
                 <a
                   href={`http://localhost:8000/api/v1/models/${selectedDataset.id}_student_int8/export/cpp`}
                   download="tinyai_edge.h"
-                  className="px-3 py-1.5 rounded bg-surface-2 border border-border hover:border-violet text-text flex items-center space-x-1.5 transition-colors"
+                  className="px-3 py-1.5 rounded bg-surface-2 border border-border hover:border-violet text-text flex items-center space-x-1.5 transition-colors cursor-pointer"
                 >
                   <FileCode className="w-3.5 h-3.5 text-violet" />
                   <span>Export C++ Header</span>
