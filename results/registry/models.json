@@ -3,7 +3,7 @@
     "model_id": "mod_opt_credit_c",
     "name": "Credit Card Fraud Compact Model",
     "version": "v1.0.0",
-    "experiment_id": "opt_credit_card_fraud_54861fdd",
+    "experiment_id": "opt_credit_card_fraud_a7ea2219",
     "task_type": "classification",
     "status": "PRODUCTION",
     "dataset_name": "Credit Card Fraud",
@@ -11,13 +11,13 @@
     "original_size_kb": 94.31,
     "compressed_size_kb": 7.09,
     "compression_ratio": "13.3x",
-    "latency_ms": 0.025,
+    "latency_ms": 0.099,
     "accuracy_metric": "ROC-AUC",
     "accuracy_val": 1.0,
     "format": "INT8 ONNX",
-    "artifact_path": "C:\\Users\\Sahiti Veeravalli\\OneDrive\\Desktop\\TinyAI\\results\\models\\opt_credit_card_fraud_54861fdd_student_int8.onnx",
-    "checksum": "4133aa06f08e3ef8bca76a0f0fae7e242673187cd2e8ce0eb99107fe077c92a3",
-    "last_deployed": "2026-10-29 11:30 UTC"
+    "artifact_path": "C:\\Users\\Sahiti Veeravalli\\OneDrive\\Desktop\\TinyAI\\results\\models\\opt_credit_card_fraud_a7ea2219_student_int8.onnx",
+    "checksum": "7ae53905d6d5e37352eef5972403e292891f64123fcfad39ace436dd40b051bf",
+    "last_deployed": "2026-10-29 13:14 UTC"
   },
   {
     "model_id": "mod_opt_ds_ca490",
